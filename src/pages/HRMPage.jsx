@@ -946,38 +946,9 @@ function HRMasterFilesView() {
   };
 
   return (
-    <div className="-mx-4 lg:-mx-6 -mt-2 flex min-h-screen">
-      {/* Left sidebar — dark themed matching HRM */}
-      <div className="w-48 shrink-0 bg-dark-900 border-r border-dark-700 flex flex-col">
-        <div className="px-4 py-3 border-b border-dark-700">
-          <div className="flex items-center gap-2">
-            <Database size={14} className="text-gold-400 shrink-0" />
-            <div>
-              <p className="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Master Files</p>
-              <p className="text-dark-400 text-[9px] mt-0.5">Data File Maintenance</p>
-            </div>
-          </div>
-        </div>
-        <nav className="flex-1 py-2">
-          {MF_TABS.map(t => (
-            <button
-              key={t.key}
-              onClick={() => setMfTab(t.key)}
-              className={`w-full flex items-start gap-2 px-3 py-2 text-left text-xs font-medium transition-all border-l-2
-                ${mfTab === t.key
-                  ? 'bg-gold-500/20 text-gold-400 border-l-gold-400'
-                  : 'text-dark-400 hover:bg-dark-700 hover:text-white border-l-transparent'
-                }`}
-            >
-              <t.icon size={12} className="shrink-0 mt-0.5" />
-              <span className="leading-tight">{t.label}</span>
-            </button>
-          ))}
-        </nav>
-      </div>
-
-      {/* Main content area */}
-      <div className="flex-1 overflow-auto bg-gray-50/50">
+    <div className="-mx-4 lg:-mx-6 -mt-2 min-h-screen">
+      {/* Main content area (no vertical sidebar) */}
+      <div className="overflow-auto bg-gray-50/50">
         <div className="p-4 lg:p-6">
           {/* Breadcrumb header */}
           <div className="flex items-center justify-between mb-5">
@@ -999,6 +970,21 @@ function HRMasterFilesView() {
                 ← Back to Overview
               </button>
             )}
+          </div>
+          {/* Horizontal tabs for quicker navigation (scrollable) */}
+          <div className="mb-5 overflow-x-auto">
+            <div className="flex items-center gap-2">
+              {MF_TABS.map(t => (
+                <button
+                  key={t.key}
+                  onClick={() => setMfTab(t.key)}
+                  className={`px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap transition-colors ${mfTab === t.key ? 'bg-dark-900 text-gold-400' : 'bg-dark-100 text-dark-500 hover:bg-dark-200 hover:text-dark-800'}`}
+                >
+                  <t.icon size={12} className="inline mr-2" />
+                  {t.label}
+                </button>
+              ))}
+            </div>
           </div>
           {renderContent()}
         </div>
