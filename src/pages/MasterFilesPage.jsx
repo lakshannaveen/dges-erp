@@ -1191,34 +1191,31 @@ export default function MasterFilesPage() {
   };
 
   return (
-    <div className="flex gap-0 -m-4 lg:-m-6 min-h-full">
-      {/* Left Category Sidebar — mimics the old C# blue sidebar */}
-      <div className="w-44 shrink-0 bg-white border-r border-gray-200 flex flex-col min-h-full">
-        <div className="px-3 py-3 border-b border-gray-200 bg-blue-700">
-          <p className="text-white text-xs font-bold uppercase tracking-widest">Master Files</p>
-          <p className="text-blue-200 text-[10px] mt-0.5">Data File Maintenance</p>
+    <div className="-m-4 lg:-m-6 min-h-full bg-gray-50">
+      <div className="px-4 lg:px-6 pt-4 lg:pt-6">
+        <div className="bg-black rounded-lg border border-gray-800 shadow-sm p-2 mb-4">
+          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {MF_TABS.map(t => (
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-colors whitespace-nowrap
+                  ${tab === t.key
+                    ? 'bg-amber-500 text-black'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  }`}
+              >
+                <t.icon size={13} className="shrink-0" />
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
-        <nav className="flex-1 py-1.5">
-          {MF_TABS.map(t => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`w-full flex items-start gap-2 px-3 py-2.5 text-left text-xs font-medium transition-all border-l-2
-                ${tab === t.key
-                  ? 'bg-blue-600 text-white border-l-blue-300'
-                  : 'text-gray-600 hover:bg-blue-50 hover:text-blue-800 border-l-transparent'
-                }`}
-            >
-              <t.icon size={13} className="shrink-0 mt-0.5" />
-              <span className="leading-tight">{t.label}</span>
-            </button>
-          ))}
-        </nav>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-4 lg:p-6">
+      <div className="px-4 lg:px-6 pb-4 lg:pb-6">
+        <div>
           <div className="flex items-center justify-between mb-5">
             <div>
               <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
