@@ -9,6 +9,7 @@ import {
   FileSignature, ChevronLeft, ChevronRight, X,
   BarChart2, Briefcase, Clock, Calendar, Award, BookOpen,
   User, ShieldAlert, LogOut, FileText, ChevronDown,
+  FolderOpen, Database,
 } from 'lucide-react';
 
 const navItems = [
@@ -21,12 +22,14 @@ const navItems = [
   { path: '/procurement', label: 'eProcurement', icon: ShoppingCart },
   { path: '/production', label: 'eProduction', icon: Factory },
   { path: '/subcontract', label: 'eSubcontract', icon: FileSignature },
+  { path: '/master-files', label: 'Master Files', icon: Database },
 ];
 
 const HR_MODULES = [
   { key: 'overview',     label: 'Overview',           icon: BarChart2 },
   { key: 'employees',    label: 'Employee Management', icon: Users },
   { key: 'recruitment',  label: 'Recruitment',         icon: Briefcase },
+  { key: 'masterfiles',  label: 'Master Files',        icon: Database },
   { key: 'attendance',   label: 'Attendance & Shifts', icon: Clock },
   { key: 'leave',        label: 'Leave Management',    icon: Calendar },
   { key: 'payroll',      label: 'Payroll',             icon: DollarSign },

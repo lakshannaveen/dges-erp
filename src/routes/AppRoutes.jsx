@@ -12,6 +12,7 @@ import { OfficePage } from '../pages/OfficePage';
 import ProcurementPage from '../pages/ProcurementPage';
 import ProductionPage from '../pages/ProductionPage';
 import SubcontractPage from '../pages/SubcontractPage';
+import MasterFilesPage from '../pages/MasterFilesPage';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useSelector(s => s.auth);
@@ -42,6 +43,7 @@ export default function AppRoutes() {
                 <Route path="/procurement" element={<ProcurementPage />} />
                 <Route path="/production" element={<ProductionPage />} />
                 <Route path="/subcontract" element={<SubcontractPage />} />
+                <Route path="/master-files" element={<MasterFilesPage />} />
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Routes>

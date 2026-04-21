@@ -5,7 +5,8 @@ import {
   Users, Clock, Calendar, Search, User, BarChart2, Briefcase,
   Plus, ChevronRight, Award, BookOpen, ShieldAlert, Package,
   LogOut, FileText, DollarSign, Settings, X, Camera, Upload,
-  Check, AlertTriangle, Eye, Edit2, ChevronDown, ChevronUp
+  Check, AlertTriangle, Eye, Edit2, ChevronDown, ChevronUp,
+  Database, Tag, Building2, MapPin, Shield, Save, RotateCcw, CheckCircle,
 } from 'lucide-react';
 import {
   fetchEmployees, fetchAttendance, fetchLeave, fetchPayroll,
@@ -26,6 +27,7 @@ const HR_MODULES = [
   { key: 'overview',    label: 'Overview',          icon: BarChart2 },
   { key: 'employees',   label: 'Employee Management', icon: Users },
   { key: 'recruitment', label: 'Recruitment',        icon: Briefcase },
+  { key: 'masterfiles', label: 'Master Files',       icon: Database },
   { key: 'attendance',  label: 'Attendance & Shifts', icon: Clock },
   { key: 'leave',       label: 'Leave Management',   icon: Calendar },
   { key: 'payroll',     label: 'Payroll',            icon: DollarSign },
@@ -51,7 +53,7 @@ function FieldRow({ label, value }) {
   );
 }
 
-// ─── Add Employee Form (mirrors old C# interface) ─────────────────────────────
+// ─── Add Employee Form ─────────────────────────────────────────────────────────
 function AddEmployeeForm({ onClose, onSave, employees }) {
   const photoRef = useRef();
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -112,71 +114,26 @@ function AddEmployeeForm({ onClose, onSave, employees }) {
 
   return (
     <div className="text-xs">
-      {/* Top header row */}
       <div className="grid grid-cols-12 gap-2 mb-3 pb-3 border-b border-dark-100">
-        <div className="col-span-2">
-          {lbl('Service No', true)}
-          <input className={inputCls} value={form.serviceNo} onChange={e => set('serviceNo', e.target.value)} />
-        </div>
-        <div className="col-span-1">
-          {lbl('Title')}
-          <select className={selectCls} value={form.title} onChange={e => set('title', e.target.value)}>
-            {['Mr','Mrs','Ms','Dr','Prof','Rev'].map(t => <option key={t}>{t}</option>)}
-          </select>
-        </div>
-        <div className="col-span-2">
-          {lbl('Gender')}
-          <select className={selectCls} value={form.gender} onChange={e => set('gender', e.target.value)}>
-            <option>Male</option><option>Female</option>
-          </select>
-        </div>
-        <div className="col-span-2">
-          {lbl('Initials')}
-          <input className={inputCls} value={form.initials} onChange={e => set('initials', e.target.value)} placeholder="e.g. R.P." />
-        </div>
+        <div className="col-span-2">{lbl('Service No', true)}<input className={inputCls} value={form.serviceNo} onChange={e => set('serviceNo', e.target.value)} /></div>
+        <div className="col-span-1">{lbl('Title')}<select className={selectCls} value={form.title} onChange={e => set('title', e.target.value)}>{['Mr','Mrs','Ms','Dr','Prof','Rev'].map(t => <option key={t}>{t}</option>)}</select></div>
+        <div className="col-span-2">{lbl('Gender')}<select className={selectCls} value={form.gender} onChange={e => set('gender', e.target.value)}><option>Male</option><option>Female</option></select></div>
+        <div className="col-span-2">{lbl('Initials')}<input className={inputCls} value={form.initials} onChange={e => set('initials', e.target.value)} placeholder="e.g. R.P." /></div>
         <div className="col-span-5 row-span-4 flex flex-col items-center justify-center border border-dashed border-dark-200 rounded p-2 bg-dark-50">
           <div className="w-24 h-28 border border-dark-200 rounded overflow-hidden bg-white flex items-center justify-center mb-2">
-            {photoPreview
-              ? <img src={photoPreview} alt="Employee" className="w-full h-full object-cover" />
-              : <Camera size={28} className="text-dark-200" />
-            }
+            {photoPreview ? <img src={photoPreview} alt="Employee" className="w-full h-full object-cover" /> : <Camera size={28} className="text-dark-200" />}
           </div>
           <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
-          <button type="button" onClick={() => photoRef.current.click()}
-            className="flex items-center gap-1 text-xs bg-dark-800 text-white px-3 py-1 rounded hover:bg-dark-700">
-            <Upload size={12} /> Upload Photo
-          </button>
-          <div className="mt-2 w-full">
-            {lbl('Status')}
-            <select className={selectCls} value={form.status} onChange={e => set('status', e.target.value)}>
-              <option>Active</option><option>Inactive</option><option>On Leave</option>
-            </select>
-          </div>
+          <button type="button" onClick={() => photoRef.current.click()} className="flex items-center gap-1 text-xs bg-dark-800 text-white px-3 py-1 rounded hover:bg-dark-700"><Upload size={12} /> Upload Photo</button>
+          <div className="mt-2 w-full">{lbl('Status')}<select className={selectCls} value={form.status} onChange={e => set('status', e.target.value)}><option>Active</option><option>Inactive</option><option>On Leave</option></select></div>
         </div>
-
-        <div className="col-span-7">
-          {lbl('First Name', true)}
-          <input className={inputCls} value={form.firstName} onChange={e => set('firstName', e.target.value)} />
-        </div>
-        <div className="col-span-7">
-          {lbl('Last Name', true)}
-          <input className={inputCls} value={form.lastName} onChange={e => set('lastName', e.target.value)} />
-        </div>
-        <div className="col-span-4">
-          {lbl('Report Name')}
-          <input className={inputCls} value={form.reportName} onChange={e => set('reportName', e.target.value)} />
-        </div>
-        <div className="col-span-3">
-          {lbl('Designation')}
-          <input className={inputCls} value={form.designation} onChange={e => set('designation', e.target.value)} />
-        </div>
+        <div className="col-span-7">{lbl('First Name', true)}<input className={inputCls} value={form.firstName} onChange={e => set('firstName', e.target.value)} /></div>
+        <div className="col-span-7">{lbl('Last Name', true)}<input className={inputCls} value={form.lastName} onChange={e => set('lastName', e.target.value)} /></div>
+        <div className="col-span-4">{lbl('Report Name')}<input className={inputCls} value={form.reportName} onChange={e => set('reportName', e.target.value)} /></div>
+        <div className="col-span-3">{lbl('Designation')}<input className={inputCls} value={form.designation} onChange={e => set('designation', e.target.value)} /></div>
       </div>
-
-      {/* Two-column body */}
       <div className="grid grid-cols-2 gap-x-4">
-        {/* LEFT COLUMN */}
         <div>
-          {/* Contact Details */}
           <SectionTitle>Contact Details</SectionTitle>
           <div className="grid grid-cols-2 gap-1 mb-2">
             <div className="col-span-2">{lbl('Address 1')}<input className={inputCls} value={form.address1} onChange={e => set('address1', e.target.value)} /></div>
@@ -187,196 +144,38 @@ function AddEmployeeForm({ onClose, onSave, employees }) {
             <div>{lbl('Personal Mobile')}<input className={inputCls} value={form.personalMobile} onChange={e => set('personalMobile', e.target.value)} /></div>
             <div>{lbl('Telephone')}<input className={inputCls} value={form.telephone} onChange={e => set('telephone', e.target.value)} /></div>
           </div>
-
-          {/* Home Details */}
-          <SectionTitle>Home Details</SectionTitle>
-          <div className="grid grid-cols-2 gap-1 mb-2">
-            <div className="col-span-2">{lbl('Address 1')}<input className={inputCls} value={form.homeAddress1} onChange={e => set('homeAddress1', e.target.value)} /></div>
-            <div className="col-span-2">{lbl('Address 2')}<input className={inputCls} value={form.homeAddress2} onChange={e => set('homeAddress2', e.target.value)} /></div>
-            <div>{lbl('Town')}<input className={inputCls} value={form.homeTown} onChange={e => set('homeTown', e.target.value)} /></div>
-            <div>{lbl('Telephone')}<input className={inputCls} value={form.homeTelephone} onChange={e => set('homeTelephone', e.target.value)} /></div>
-            <div>{lbl('City')}<input className={inputCls} value={form.homeCity} onChange={e => set('homeCity', e.target.value)} /></div>
-            <div>{lbl('Gramasewaka Division')}<input className={inputCls} value={form.homeGramasewaka} onChange={e => set('homeGramasewaka', e.target.value)} /></div>
-            <div>{lbl('Electorate')}<input className={inputCls} value={form.homeElectorate} onChange={e => set('homeElectorate', e.target.value)} /></div>
-            <div>{lbl('Police Station')}<input className={inputCls} value={form.homePoliceStation} onChange={e => set('homePoliceStation', e.target.value)} /></div>
-            <div>{lbl('District')}<input className={inputCls} value={form.homeDistrict} onChange={e => set('homeDistrict', e.target.value)} /></div>
-            <div className="flex gap-1 items-end">
-              <div className="flex-1">{lbl('Distance')}<input className={inputCls} value={form.homeDistance} onChange={e => set('homeDistance', e.target.value)} /></div>
-              <span className="text-xs text-dark-400 pb-1">km</span>
-            </div>
-            <div>{lbl('Province')}<input className={inputCls} value={form.homeProvince} onChange={e => set('homeProvince', e.target.value)} /></div>
-          </div>
-
-          {/* Employment Details */}
           <SectionTitle>Employment Details</SectionTitle>
           <div className="grid grid-cols-2 gap-1 mb-2">
             <div>{lbl('Division')}<input className={inputCls} value={form.division} onChange={e => set('division', e.target.value)} /></div>
             <div>{lbl('Grade')}<input className={inputCls} value={form.grade} onChange={e => set('grade', e.target.value)} /></div>
             <div>{lbl('Department', true)}<input className={inputCls} value={form.department} onChange={e => set('department', e.target.value)} /></div>
-            <div>{lbl('Work Category')}
-              <select className={selectCls} value={form.workCategory} onChange={e => set('workCategory', e.target.value)}>
-                <option value="">Select...</option>
-                {['Permanent','Contract','Casual','Trainee','Part-Time'].map(w => <option key={w}>{w}</option>)}
-              </select>
-            </div>
+            <div>{lbl('Work Category')}<select className={selectCls} value={form.workCategory} onChange={e => set('workCategory', e.target.value)}><option value="">Select...</option>{['Permanent','Contract','Casual','Trainee','Part-Time'].map(w => <option key={w}>{w}</option>)}</select></div>
             <div>{lbl('Location')}<input className={inputCls} value={form.location} onChange={e => set('location', e.target.value)} /></div>
-            <div>{lbl('Employee Category')}
-              <select className={selectCls} value={form.employeeCategory} onChange={e => set('employeeCategory', e.target.value)}>
-                <option value="">Select...</option>
-                {['Staff','Worker','Management','Executive'].map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Initial Category')}<input className={inputCls} value={form.initialCategory} onChange={e => set('initialCategory', e.target.value)} /></div>
+            <div>{lbl('Employee Category')}<select className={selectCls} value={form.employeeCategory} onChange={e => set('employeeCategory', e.target.value)}><option value="">Select...</option>{['Staff','Worker','Management','Executive'].map(c => <option key={c}>{c}</option>)}</select></div>
             <div>{lbl('EPF No')}<input className={inputCls} value={form.epfNo} onChange={e => set('epfNo', e.target.value)} /></div>
             <div className="col-span-2">{lbl('Email Address', true)}<input className={inputCls} type="email" value={form.email} onChange={e => set('email', e.target.value)} /></div>
-            <div>{lbl('Initial Grade')}<input className={inputCls} value={form.initialGrade} onChange={e => set('initialGrade', e.target.value)} /></div>
-            <div>{lbl('Extension')}<input className={inputCls} value={form.extension} onChange={e => set('extension', e.target.value)} /></div>
-            <div>{lbl('Reporting Officer')}
-              <select className={selectCls} value={form.reportingOfficer} onChange={e => set('reportingOfficer', e.target.value)}>
-                <option value="">Select...</option>
-                {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Attendance Payment')}
-              <select className={selectCls} value={form.attendancePayment} onChange={e => set('attendancePayment', e.target.value)}>
-                <option>No</option><option>Yes</option>
-              </select>
-            </div>
             <div>{lbl('Recruitment Date')}<input className={inputCls} type="date" value={form.recruitmentDate} onChange={e => set('recruitmentDate', e.target.value)} /></div>
-            <div>{lbl('Shift Code 1')}<input className={inputCls} value={form.shiftCode1} onChange={e => set('shiftCode1', e.target.value)} /></div>
-            <div>{lbl('Promoted Date')}<input className={inputCls} type="date" value={form.promotedDate} onChange={e => set('promotedDate', e.target.value)} /></div>
-            <div>{lbl('Shift Code 2')}<input className={inputCls} value={form.shiftCode2} onChange={e => set('shiftCode2', e.target.value)} /></div>
-            <div>{lbl('Permanent Date')}<input className={inputCls} type="date" value={form.permanentDate} onChange={e => set('permanentDate', e.target.value)} /></div>
-            <div>{lbl('Shift Code 3')}<input className={inputCls} value={form.shiftCode3} onChange={e => set('shiftCode3', e.target.value)} /></div>
-            <div>{lbl('Retirement Date')}<input className={inputCls} type="date" value={form.retirementDate} onChange={e => set('retirementDate', e.target.value)} /></div>
-            <div>{lbl('Union Code')}<input className={inputCls} value={form.unionCode} onChange={e => set('unionCode', e.target.value)} /></div>
-            <div>{lbl('Leaving Date')}<input className={inputCls} type="date" value={form.leavingDate} onChange={e => set('leavingDate', e.target.value)} /></div>
-            <div>{lbl('Association')}<input className={inputCls} value={form.association} onChange={e => set('association', e.target.value)} /></div>
-            <div>{lbl('Reason For Leaving')}
-              <select className={selectCls} value={form.reasonForLeaving} onChange={e => set('reasonForLeaving', e.target.value)}>
-                <option value="">Select...</option>
-                {['Resignation','Retirement','Termination','Transfer','Death','Contract End'].map(r => <option key={r}>{r}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Present Employer')}
-              <select className={selectCls} value={form.presentEmployer} onChange={e => set('presentEmployer', e.target.value)}>
-                <option value="">Select...</option><option>DGE</option><option>External</option>
-              </select>
-            </div>
-            <div>{lbl('Contract Type')}
-              <select className={selectCls} value={form.contractType} onChange={e => set('contractType', e.target.value)}>
-                {['Permanent','Contract','Probation'].map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Project No')}<input className={inputCls} value={form.projectNo} onChange={e => set('projectNo', e.target.value)} /></div>
-            <div>{lbl('Start Date')}<input className={inputCls} type="date" value={form.startDate} onChange={e => set('startDate', e.target.value)} /></div>
-            <div>{lbl('End Date')}<input className={inputCls} type="date" value={form.endDate} onChange={e => set('endDate', e.target.value)} /></div>
-            <div className="col-span-2">{lbl('Other Important Information')}<textarea className={inputCls + ' h-14 resize-none'} value={form.otherInfo} onChange={e => set('otherInfo', e.target.value)} /></div>
+            <div>{lbl('Contract Type')}<select className={selectCls} value={form.contractType} onChange={e => set('contractType', e.target.value)}>{['Permanent','Contract','Probation'].map(c => <option key={c}>{c}</option>)}</select></div>
           </div>
         </div>
-
-        {/* RIGHT COLUMN */}
         <div>
-          {/* IDs */}
-          <div className="grid grid-cols-2 gap-1 mb-3 p-2 bg-dark-50 rounded">
-            <div>{lbl('Proximity Card No')}<input className={inputCls} value={form.proximityCardNo} onChange={e => set('proximityCardNo', e.target.value)} /></div>
-            <div>{lbl('Barcode No')}<input className={inputCls} value={form.barcodeNo} onChange={e => set('barcodeNo', e.target.value)} /></div>
-            <div>{lbl('CDL Service No')}<input className={inputCls} value={form.cdlServiceNo} onChange={e => set('cdlServiceNo', e.target.value)} /></div>
-            <div>{lbl('Blood Group')}
-              <select className={selectCls} value={form.bloodGroup} onChange={e => set('bloodGroup', e.target.value)}>
-                <option value="">Select...</option>
-                {['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(g => <option key={g}>{g}</option>)}
-              </select>
-            </div>
-            <div className="col-span-2">{lbl('Occupational Group')}<input className={inputCls} value={form.occupationalGroup} onChange={e => set('occupationalGroup', e.target.value)} /></div>
-          </div>
-
-          {/* Employee Details */}
           <SectionTitle>Employee Details</SectionTitle>
           <div className="grid grid-cols-2 gap-1 mb-2">
             <div>{lbl('National ID', true)}<input className={inputCls} value={form.nationalId} onChange={e => set('nationalId', e.target.value)} /></div>
-            <div>{lbl('Meal Requirement')}
-              <select className={selectCls} value={form.mealRequirement} onChange={e => set('mealRequirement', e.target.value)}>
-                <option>No</option><option>Yes</option>
-              </select>
-            </div>
-            <div>{lbl('Transport Mode')}
-              <select className={selectCls} value={form.transportMode} onChange={e => set('transportMode', e.target.value)}>
-                <option value="">Select...</option>
-                {['Company Bus','Own Vehicle','Public Transport','Company Vehicle','Walking'].map(t => <option key={t}>{t}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Passport No')}<input className={inputCls} value={form.passportNo} onChange={e => set('passportNo', e.target.value)} /></div>
-            <div>{lbl('Breakfast Requirement')}
-              <select className={selectCls} value={form.breakfastRequirement} onChange={e => set('breakfastRequirement', e.target.value)}>
-                <option>No</option><option>Yes</option>
-              </select>
-            </div>
-            <div>{lbl('Own Vehicle')}
-              <select className={selectCls} value={form.ownVehicle} onChange={e => set('ownVehicle', e.target.value)}>
-                <option>No</option><option>Yes</option>
-              </select>
-            </div>
             <div>{lbl('D.O.B.', true)}<input className={inputCls} type="date" value={form.dob} onChange={e => set('dob', e.target.value)} /></div>
-            <div>{lbl('Snack Center')}<input className={inputCls} value={form.snackCenter} onChange={e => set('snackCenter', e.target.value)} /></div>
-            <div>{lbl('Vehicle Type')}
-              <select className={selectCls} value={form.vehicleType} onChange={e => set('vehicleType', e.target.value)}>
-                <option value="">Select...</option>
-                {['Car','Motorbike','Van','Bicycle','Three-wheeler'].map(v => <option key={v}>{v}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Marital Status')}
-              <select className={selectCls} value={form.maritalStatus} onChange={e => set('maritalStatus', e.target.value)}>
-                {['Single','Married','Divorced','Widowed'].map(m => <option key={m}>{m}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Own Home')}
-              <select className={selectCls} value={form.ownHome} onChange={e => set('ownHome', e.target.value)}>
-                <option>No</option><option>Yes</option>
-              </select>
-            </div>
-            <div>{lbl('Licence No')}<input className={inputCls} value={form.licenceNo} onChange={e => set('licenceNo', e.target.value)} /></div>
-            <div>{lbl('Religion')}
-              <select className={selectCls} value={form.religion} onChange={e => set('religion', e.target.value)}>
-                <option value="">Select...</option>
-                {['Buddhist','Hindu','Muslim','Catholic','Christian','Other'].map(r => <option key={r}>{r}</option>)}
-              </select>
-            </div>
-            <div>{lbl('Rental Amount')}<input className={inputCls} value={form.rentalAmount} onChange={e => set('rentalAmount', e.target.value)} /></div>
-            <div>{lbl('Vehicle No')}<input className={inputCls} value={form.vehicleNo} onChange={e => set('vehicleNo', e.target.value)} /></div>
-            <div>{lbl('Race')}
-              <select className={selectCls} value={form.race} onChange={e => set('race', e.target.value)}>
-                <option value="">Select...</option>
-                {['Sinhalese','Tamil','Muslim','Burgher','Malay','Other'].map(r => <option key={r}>{r}</option>)}
-              </select>
-            </div>
+            <div>{lbl('Marital Status')}<select className={selectCls} value={form.maritalStatus} onChange={e => set('maritalStatus', e.target.value)}>{['Single','Married','Divorced','Widowed'].map(m => <option key={m}>{m}</option>)}</select></div>
+            <div>{lbl('Blood Group')}<select className={selectCls} value={form.bloodGroup} onChange={e => set('bloodGroup', e.target.value)}><option value="">Select...</option>{['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(g => <option key={g}>{g}</option>)}</select></div>
+            <div>{lbl('Religion')}<select className={selectCls} value={form.religion} onChange={e => set('religion', e.target.value)}><option value="">Select...</option>{['Buddhist','Hindu','Muslim','Catholic','Christian','Other'].map(r => <option key={r}>{r}</option>)}</select></div>
+            <div>{lbl('Transport Mode')}<select className={selectCls} value={form.transportMode} onChange={e => set('transportMode', e.target.value)}><option value="">Select...</option>{['Company Bus','Own Vehicle','Public Transport','Company Vehicle','Walking'].map(t => <option key={t}>{t}</option>)}</select></div>
           </div>
-
-          {/* Next of Kin */}
           <SectionTitle>Next of Kin Details</SectionTitle>
           <div className="grid grid-cols-2 gap-1 mb-2">
             <div>{lbl('First Name')}<input className={inputCls} value={form.nextOfKinFirstName} onChange={e => set('nextOfKinFirstName', e.target.value)} /></div>
             <div>{lbl('Last Name')}<input className={inputCls} value={form.nextOfKinLastName} onChange={e => set('nextOfKinLastName', e.target.value)} /></div>
             <div className="col-span-2">{lbl('Full Address')}<input className={inputCls} value={form.nextOfKinAddress} onChange={e => set('nextOfKinAddress', e.target.value)} /></div>
             <div>{lbl('Telephone')}<input className={inputCls} value={form.nextOfKinPhone} onChange={e => set('nextOfKinPhone', e.target.value)} /></div>
-            <div>{lbl('Relationship')}
-              <select className={selectCls} value={form.nextOfKinRelationship} onChange={e => set('nextOfKinRelationship', e.target.value)}>
-                <option value="">Select...</option>
-                {['Spouse','Father','Mother','Son','Daughter','Brother','Sister','Other'].map(r => <option key={r}>{r}</option>)}
-              </select>
-            </div>
+            <div>{lbl('Relationship')}<select className={selectCls} value={form.nextOfKinRelationship} onChange={e => set('nextOfKinRelationship', e.target.value)}><option value="">Select...</option>{['Spouse','Father','Mother','Son','Daughter','Brother','Sister','Other'].map(r => <option key={r}>{r}</option>)}</select></div>
           </div>
-
-          {/* Spouse Details */}
-          <SectionTitle>Spouse Details</SectionTitle>
-          <div className="grid grid-cols-2 gap-1 mb-2">
-            <div>{lbl('First Name')}<input className={inputCls} value={form.spouseFirstName} onChange={e => set('spouseFirstName', e.target.value)} /></div>
-            <div>{lbl('Last Name')}<input className={inputCls} value={form.spouseLastName} onChange={e => set('spouseLastName', e.target.value)} /></div>
-            <div>{lbl('D.O.B.')}<input className={inputCls} type="date" value={form.spouseDob} onChange={e => set('spouseDob', e.target.value)} /></div>
-            <div>{lbl('No. of Children')}<input className={inputCls} type="number" min="0" value={form.noOfChildren} onChange={e => set('noOfChildren', e.target.value)} /></div>
-          </div>
-
-          {/* Grades & Designation */}
           <SectionTitle>Grades & Designation Details</SectionTitle>
           <div className="grid grid-cols-2 gap-1 mb-2">
             <div className="col-span-2">{lbl('Highest Educational Qualification')}<input className={inputCls} value={form.highestEducation} onChange={e => set('highestEducation', e.target.value)} /></div>
@@ -385,13 +184,9 @@ function AddEmployeeForm({ onClose, onSave, employees }) {
           </div>
         </div>
       </div>
-
-      {/* Action buttons */}
       <div className="flex justify-end gap-3 pt-3 border-t border-dark-100 mt-2">
         <button type="button" onClick={onClose} className="btn-ghost">Cancel</button>
-        <button type="button" onClick={handleSubmit} className="btn-primary flex items-center gap-2">
-          <Check size={14} /> Save Employee
-        </button>
+        <button type="button" onClick={handleSubmit} className="btn-primary flex items-center gap-2"><Check size={14} /> Save Employee</button>
       </div>
     </div>
   );
@@ -406,9 +201,7 @@ function EmployeeSummaryCard({ emp, onClick }) {
         <div className="shrink-0">
           {emp.photo
             ? <img src={emp.photo} alt={emp.firstName} className="w-14 h-16 rounded-lg object-cover border border-dark-100" />
-            : <div className="w-14 h-16 gold-gradient rounded-lg flex items-center justify-center">
-                <span className="text-dark-900 font-bold text-base">{initials}</span>
-              </div>
+            : <div className="w-14 h-16 gold-gradient rounded-lg flex items-center justify-center"><span className="text-dark-900 font-bold text-base">{initials}</span></div>
           }
         </div>
         <div className="min-w-0 flex-1">
@@ -419,9 +212,6 @@ function EmployeeSummaryCard({ emp, onClick }) {
           <p className="text-xs text-gold-600 font-medium mt-0.5">{emp.id}</p>
           <p className="text-xs text-dark-500 mt-1">{emp.designation}</p>
           <p className="text-xs text-dark-400">{emp.department} {emp.division ? `· ${emp.division}` : ''}</p>
-          <div className="flex items-center gap-3 mt-2">
-            <span className="text-xs text-dark-400">{emp.email || '—'}</span>
-          </div>
         </div>
       </div>
     </Card>
@@ -434,148 +224,784 @@ function EmployeeDetailView({ emp, onClose }) {
   const tabs = ['personal','contact','employment','kin','qualifications'];
   return (
     <div className="text-xs">
-      {/* Header */}
       <div className="flex items-center gap-4 mb-4 pb-4 border-b border-dark-100">
         <div className="shrink-0">
           {emp.photo
             ? <img src={emp.photo} alt="" className="w-20 h-24 rounded-xl object-cover border-2 border-gold-300" />
-            : <div className="w-20 h-24 gold-gradient rounded-xl flex items-center justify-center">
-                <span className="text-dark-900 font-bold text-2xl">{emp.initials || (emp.firstName?.[0] + (emp.lastName?.[0] || ''))}</span>
-              </div>
+            : <div className="w-20 h-24 gold-gradient rounded-xl flex items-center justify-center"><span className="text-dark-900 font-bold text-2xl">{emp.initials || (emp.firstName?.[0] + (emp.lastName?.[0] || ''))}</span></div>
           }
         </div>
         <div>
           <h2 className="text-lg font-bold text-dark-900">{emp.title} {emp.firstName} {emp.lastName}</h2>
           <p className="text-gold-600 font-medium">{emp.id} · {emp.designation}</p>
           <p className="text-dark-400">{emp.department} {emp.division ? `— ${emp.division}` : ''}</p>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge status={emp.status} />
-            <span className="text-dark-400">EPF: {emp.epfNo}</span>
-          </div>
+          <div className="flex items-center gap-2 mt-1"><Badge status={emp.status} /><span className="text-dark-400">EPF: {emp.epfNo}</span></div>
         </div>
       </div>
-
-      {/* Sub-tabs */}
       <div className="flex gap-1 mb-3 overflow-x-auto">
         {tabs.map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-3 py-1.5 rounded text-xs font-medium capitalize whitespace-nowrap transition-colors
-              ${tab === t ? 'bg-dark-900 text-gold-400' : 'bg-dark-100 text-dark-500 hover:text-dark-800'}`}>
-            {t}
-          </button>
+          <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 rounded text-xs font-medium capitalize whitespace-nowrap transition-colors ${tab === t ? 'bg-dark-900 text-gold-400' : 'bg-dark-100 text-dark-500 hover:text-dark-800'}`}>{t}</button>
         ))}
       </div>
-
       {tab === 'personal' && (
         <div className="grid grid-cols-2 gap-x-6">
-          <div>
-            <SectionTitle>Personal</SectionTitle>
-            <FieldRow label="National ID" value={emp.nationalId} />
-            <FieldRow label="Passport No" value={emp.passportNo} />
-            <FieldRow label="Date of Birth" value={emp.dob} />
-            <FieldRow label="Gender" value={emp.gender} />
-            <FieldRow label="Marital Status" value={emp.maritalStatus} />
-            <FieldRow label="Religion" value={emp.religion} />
-            <FieldRow label="Race" value={emp.race} />
-            <FieldRow label="Blood Group" value={emp.bloodGroup} />
-          </div>
-          <div>
-            <SectionTitle>Identification</SectionTitle>
-            <FieldRow label="Service No" value={emp.serviceNo} />
-            <FieldRow label="Proximity Card" value={emp.proximityCardNo} />
-            <FieldRow label="Barcode" value={emp.barcodeNo} />
-            <FieldRow label="CDL Service No" value={emp.cdlServiceNo} />
-            <SectionTitle>Transport</SectionTitle>
-            <FieldRow label="Transport Mode" value={emp.transportMode} />
-            <FieldRow label="Own Vehicle" value={emp.ownVehicle} />
-            <FieldRow label="Vehicle Type" value={emp.vehicleType} />
-            <FieldRow label="Licence No" value={emp.licenceNo} />
-            <FieldRow label="Vehicle No" value={emp.vehicleNo} />
-          </div>
+          <div><SectionTitle>Personal</SectionTitle><FieldRow label="National ID" value={emp.nationalId} /><FieldRow label="Date of Birth" value={emp.dob} /><FieldRow label="Gender" value={emp.gender} /><FieldRow label="Marital Status" value={emp.maritalStatus} /><FieldRow label="Blood Group" value={emp.bloodGroup} /></div>
+          <div><SectionTitle>Identification</SectionTitle><FieldRow label="Service No" value={emp.serviceNo} /><FieldRow label="Proximity Card" value={emp.proximityCardNo} /><SectionTitle>Transport</SectionTitle><FieldRow label="Transport Mode" value={emp.transportMode} /><FieldRow label="Own Vehicle" value={emp.ownVehicle} /></div>
         </div>
       )}
       {tab === 'contact' && (
         <div className="grid grid-cols-2 gap-x-6">
-          <div>
-            <SectionTitle>Contact Address</SectionTitle>
-            <FieldRow label="Address 1" value={emp.address1} />
-            <FieldRow label="Address 2" value={emp.address2} />
-            <FieldRow label="Town" value={emp.town} />
-            <FieldRow label="City" value={emp.city} />
-            <FieldRow label="Corporate Mobile" value={emp.corporateMobile} />
-            <FieldRow label="Personal Mobile" value={emp.phone || emp.personalMobile} />
-            <FieldRow label="Email" value={emp.email} />
-          </div>
-          <div>
-            <SectionTitle>Home Address</SectionTitle>
-            <FieldRow label="Address 1" value={emp.homeAddress1} />
-            <FieldRow label="Address 2" value={emp.homeAddress2} />
-            <FieldRow label="Gramasewaka Div." value={emp.homeGramasewaka} />
-            <FieldRow label="Police Station" value={emp.homePoliceStation} />
-            <FieldRow label="District" value={emp.homeDistrict || emp.district} />
-            <FieldRow label="Province" value={emp.homeProvince || emp.province} />
-            <FieldRow label="Distance" value={emp.homeDistance ? `${emp.homeDistance} km` : ''} />
-            <SectionTitle>Spouse</SectionTitle>
-            <FieldRow label="Spouse Name" value={`${emp.spouseFirstName || ''} ${emp.spouseLastName || ''}`.trim()} />
-            <FieldRow label="Spouse DOB" value={emp.spouseDob} />
-            <FieldRow label="No. of Children" value={emp.noOfChildren} />
-          </div>
+          <div><SectionTitle>Contact Address</SectionTitle><FieldRow label="Address 1" value={emp.address1} /><FieldRow label="City" value={emp.city} /><FieldRow label="Personal Mobile" value={emp.phone || emp.personalMobile} /><FieldRow label="Email" value={emp.email} /></div>
+          <div><SectionTitle>Home Address</SectionTitle><FieldRow label="Address 1" value={emp.homeAddress1} /><FieldRow label="District" value={emp.homeDistrict || emp.district} /><FieldRow label="Province" value={emp.homeProvince || emp.province} /></div>
         </div>
       )}
       {tab === 'employment' && (
         <div className="grid grid-cols-2 gap-x-6">
-          <div>
-            <SectionTitle>Employment</SectionTitle>
-            <FieldRow label="Division" value={emp.division} />
-            <FieldRow label="Department" value={emp.department} />
-            <FieldRow label="Location" value={emp.location} />
-            <FieldRow label="Grade" value={emp.grade} />
-            <FieldRow label="Work Category" value={emp.workCategory} />
-            <FieldRow label="Emp. Category" value={emp.employeeCategory} />
-            <FieldRow label="EPF No" value={emp.epfNo} />
-            <FieldRow label="Contract Type" value={emp.contractType} />
-            <FieldRow label="Occ. Group" value={emp.occupationalGroup} />
-          </div>
-          <div>
-            <SectionTitle>Key Dates</SectionTitle>
-            <FieldRow label="Recruitment Date" value={emp.recruitmentDate} />
-            <FieldRow label="Join Date" value={emp.joinDate} />
-            <FieldRow label="Promoted Date" value={emp.promotedDate} />
-            <FieldRow label="Permanent Date" value={emp.permanentDate} />
-            <FieldRow label="Retirement Date" value={emp.retirementDate} />
-            <SectionTitle>Meal & Welfare</SectionTitle>
-            <FieldRow label="Meal Requirement" value={emp.mealRequirement} />
-            <FieldRow label="Breakfast Req." value={emp.breakfastRequirement} />
-            <FieldRow label="Snack Center" value={emp.snackCenter} />
-            <FieldRow label="Own Home" value={emp.ownHome} />
-            <FieldRow label="Rental Amount" value={emp.rentalAmount ? `Rs. ${emp.rentalAmount}` : ''} />
-          </div>
+          <div><SectionTitle>Employment</SectionTitle><FieldRow label="Division" value={emp.division} /><FieldRow label="Department" value={emp.department} /><FieldRow label="Grade" value={emp.grade} /><FieldRow label="Work Category" value={emp.workCategory} /><FieldRow label="EPF No" value={emp.epfNo} /><FieldRow label="Contract Type" value={emp.contractType} /></div>
+          <div><SectionTitle>Key Dates</SectionTitle><FieldRow label="Recruitment Date" value={emp.recruitmentDate} /><FieldRow label="Promoted Date" value={emp.promotedDate} /><FieldRow label="Retirement Date" value={emp.retirementDate} /></div>
         </div>
       )}
       {tab === 'kin' && (
-        <div>
-          <SectionTitle>Next of Kin</SectionTitle>
-          <div className="grid grid-cols-2 gap-x-6">
-            <FieldRow label="Name" value={`${emp.nextOfKinFirstName || ''} ${emp.nextOfKinLastName || ''}`.trim()} />
-            <FieldRow label="Relationship" value={emp.nextOfKinRelationship} />
-            <FieldRow label="Telephone" value={emp.nextOfKinPhone} />
-            <FieldRow label="Address" value={emp.nextOfKinAddress} />
-          </div>
-        </div>
+        <div><SectionTitle>Next of Kin</SectionTitle><div className="grid grid-cols-2 gap-x-6"><FieldRow label="Name" value={`${emp.nextOfKinFirstName || ''} ${emp.nextOfKinLastName || ''}`.trim()} /><FieldRow label="Relationship" value={emp.nextOfKinRelationship} /><FieldRow label="Telephone" value={emp.nextOfKinPhone} /></div></div>
       )}
       {tab === 'qualifications' && (
-        <div>
-          <SectionTitle>Education & Skills</SectionTitle>
-          <FieldRow label="Highest Education" value={emp.highestEducation} />
-          <FieldRow label="Highest Professional" value={emp.highestProfessional} />
-          <div className="mt-2">
-            <span className="text-xs text-dark-400">Skills</span>
-            <p className="text-xs text-dark-800 mt-1 bg-dark-50 p-2 rounded">{emp.skills || '—'}</p>
+        <div><SectionTitle>Education & Skills</SectionTitle><FieldRow label="Highest Education" value={emp.highestEducation} /><FieldRow label="Highest Professional" value={emp.highestProfessional} /><div className="mt-2"><span className="text-xs text-dark-400">Skills</span><p className="text-xs text-dark-800 mt-1 bg-dark-50 p-2 rounded">{emp.skills || '—'}</p></div></div>
+      )}
+      <div className="flex justify-end mt-4 pt-3 border-t border-dark-100"><button onClick={onClose} className="btn-ghost">Close</button></div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ─── MASTER FILES EMBEDDED IN HR ─────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Shared styles for master files forms (gold-themed to match HRM)
+const MF_INP = 'border border-dark-200 rounded px-2 py-1 text-xs text-dark-800 focus:outline-none focus:border-gold-400 bg-amber-50/30 w-full';
+const MF_SEL = 'border border-dark-200 rounded px-2 py-1 text-xs text-dark-800 focus:outline-none focus:border-gold-400 bg-white w-full';
+
+function MFLabel({ children, req }) {
+  return <label className="block text-xs text-dark-500 mb-0.5 font-medium">{children}{req && <span className="text-red-500 ml-0.5">*</span>}</label>;
+}
+
+function MFEntryPanel({ title, children, onSave, onClear, saved }) {
+  return (
+    <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+      <h4 className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">{title}</h4>
+      {saved && <div className="flex items-center gap-1 text-emerald-600 text-xs mb-2"><CheckCircle size={12}/> Saved!</div>}
+      <div className="space-y-2">{children}</div>
+      <div className="flex gap-2 mt-3">
+        <button onClick={onSave} className="flex items-center gap-1 bg-dark-800 hover:bg-dark-700 text-gold-400 text-xs px-3 py-1.5 rounded transition-colors"><Save size={11} /> Save</button>
+        <button onClick={onClear} className="flex items-center gap-1 border border-dark-200 hover:bg-dark-50 text-dark-500 text-xs px-3 py-1.5 rounded transition-colors"><RotateCcw size={11} /> Clear</button>
+      </div>
+    </div>
+  );
+}
+
+function MFGridSection({ title, children }) {
+  return (
+    <div className="bg-white border border-dark-100 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-dark-900 border-b border-dark-700 px-4 py-2.5">
+        <p className="text-xs font-bold text-gold-400 uppercase tracking-widest">{title}</p>
+      </div>
+      <div className="overflow-auto max-h-72">{children}</div>
+    </div>
+  );
+}
+
+// ─── Seed data ────────────────────────────────────────────────────────────────
+const SEED_DESIGNATIONS = [
+  { code: '181', description: 'TECHNICAL SALES & MARKETING MANAGER', abbr: 'TECH. SALES & MARKE…', type: 'Executive', status: 'Active' },
+  { code: '176', description: 'ACCOUNTANT', abbr: 'ACCOUNTANT', type: 'Executive', status: 'Active' },
+  { code: '182', description: 'ACCOUNTS ASSISTANT', abbr: 'ACC. ASST.', type: 'Non Executive', status: 'Active' },
+  { code: '869', description: 'ACCOUNTS CLERK', abbr: 'AC', type: 'Non Executive', status: 'Active' },
+  { code: '854', description: 'ACCOUNTS EXECUTIVE', abbr: 'AE', type: 'Executive', status: 'Active' },
+  { code: '114', description: 'ACTING GENERAL MANAGER', abbr: 'ACT. GM.', type: 'Executive', status: 'Active' },
+  { code: '023', description: 'ADMINISTRATIVE ASSISTANT', abbr: 'A A', type: 'Non Executive', status: 'Active' },
+  { code: '019', description: 'ASSISTANT ELECTRICAL ENGINEER', abbr: 'ASST. E. ENG.', type: 'Executive', status: 'Active' },
+  { code: '172', description: 'ASSISTANT ENGINEER (CIVIL)', abbr: 'ASST. ENG. (CIVIL)', type: 'Executive', status: 'Active' },
+];
+const SEED_EDUCATION = [
+  { code: '1', country: 'SRI LANKA', description: 'Below Grade V', conductedBy: '', status: 'Active' },
+  { code: '3', country: 'SRI LANKA', description: 'Upto GCE(O/L) /SSC/ NCGE', conductedBy: '', status: 'Active' },
+  { code: '5', country: 'SRI LANKA', description: 'Passed GCE(O/L) /SSC / NCGE', conductedBy: '', status: 'Active' },
+  { code: '7', country: 'SRI LANKA', description: 'Passed GCE(A/L)', conductedBy: '', status: 'Active' },
+  { code: '11', country: 'SRI LANKA', description: 'B.Sc.Eng.(Hons.)', conductedBy: '', status: 'Active' },
+  { code: '13', country: 'SRI LANKA', description: 'M.Sc.', conductedBy: '', status: 'Active' },
+  { code: '14', country: 'SRI LANKA', description: 'B.Sc.', conductedBy: '', status: 'Active' },
+  { code: '19', country: 'SRI LANKA', description: 'B.Com', conductedBy: '', status: 'Active' },
+  { code: '21', country: 'SRI LANKA', description: 'DIPLOMA IN QUANTITY SURVEYING', conductedBy: 'NAITA', status: 'Active' },
+];
+const SEED_PROFESSIONAL = [
+  { code: '1', country: 'SRI LANKA', description: 'HIGHER DIPLOMA', instituteName: '', duration: '', status: 'Active' },
+  { code: '3', country: 'SRI LANKA', description: 'HONORS DEGREE', instituteName: '', duration: '', status: 'Active' },
+  { code: '4', country: 'SRI LANKA', description: 'M.Sc.', instituteName: '', duration: '', status: 'Active' },
+  { code: '9', country: 'SRI LANKA', description: 'NATIONAL DIPLOMA IN TECHNOLOGY (N.D.T)', instituteName: '', duration: '', status: 'Active' },
+  { code: '22', country: 'SRI LANKA', description: 'DIPLOMA IN ENGINEERING', instituteName: '', duration: '', status: 'Active' },
+];
+const SEED_DIVISIONS = [
+  { code: 'MAIN', description: 'Main Division', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { code: 'ENG', description: 'Engineering Division', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { code: 'FIN', description: 'Finance Division', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { code: 'OPS', description: 'Operations Division', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+];
+const SEED_DEPARTMENTS = [
+  { divCode: 'ENG', code: 'CIVIL', description: 'Civil Engineering', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { divCode: 'ENG', code: 'MECH', description: 'Mechanical Engineering', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { divCode: 'ENG', code: 'ELEC', description: 'Electrical Engineering', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { divCode: 'FIN', code: 'ACC', description: 'Accounts', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { divCode: 'OPS', code: 'HR', description: 'Human Resources', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+];
+const SEED_LOCATIONS = [
+  { divCode: 'ENG', deptCode: 'CIVIL', code: 'HO', description: 'Head Office', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { divCode: 'ENG', deptCode: 'MECH', code: 'WK1', description: 'Workshop 1 - Colombo', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+  { divCode: 'OPS', deptCode: 'HR', code: 'HR-HO', description: 'HR Head Office', effectiveDate: '2010-01-01', status: 'Active', inactiveDate: '' },
+];
+const SEED_SHIFTS = [
+  { code: 'DAY', description: 'Day Shift', type: 'Normal', timeIn: '08:00', timeOut: '17:00', status: 'Active' },
+  { code: 'NIGHT', description: 'Night Shift', type: 'Rotating', timeIn: '20:00', timeOut: '06:00', status: 'Active' },
+  { code: 'GENERAL', description: 'General Shift', type: 'Normal', timeIn: '08:30', timeOut: '17:30', status: 'Active' },
+];
+const SEED_PROVINCES = [
+  { code: 'WP', name: 'Western Province', status: 'Active' },
+  { code: 'CP', name: 'Central Province', status: 'Active' },
+  { code: 'SP', name: 'Southern Province', status: 'Active' },
+  { code: 'NP', name: 'Northern Province', status: 'Active' },
+  { code: 'EP', name: 'Eastern Province', status: 'Active' },
+  { code: 'NWP', name: 'North Western Province', status: 'Active' },
+];
+const SEED_DISTRICTS = [
+  { provCode: 'WP', provName: 'Western Province', code: 'CMB', name: 'Colombo', status: 'Active' },
+  { provCode: 'WP', provName: 'Western Province', code: 'GAM', name: 'Gampaha', status: 'Active' },
+  { provCode: 'CP', provName: 'Central Province', code: 'KDY', name: 'Kandy', status: 'Active' },
+  { provCode: 'SP', provName: 'Southern Province', code: 'GLE', name: 'Galle', status: 'Active' },
+];
+const SEED_ELECTORATES = [
+  { provCode: 'WP', distCode: 'CMB', code: '134', name: 'Colombo Central', status: 'Active' },
+  { provCode: 'WP', distCode: 'CMB', code: '135', name: 'Colombo East', status: 'Active' },
+  { provCode: 'WP', distCode: 'GAM', code: '140', name: 'Gampaha', status: 'Active' },
+];
+const SEED_POLICE_STATIONS = [
+  { code: '1', electorateCode: '134', name: 'AHANGAMA', status: 'Active' },
+  { code: '2', electorateCode: '134', name: 'KADUWELA', status: 'Active' },
+  { code: '3', electorateCode: '134', name: 'ATURUGIRIYA', status: 'Active' },
+  { code: '4', electorateCode: '134', name: 'BORELLA', status: 'Active' },
+  { code: '5', electorateCode: '134', name: 'DEHIWALA', status: 'Active' },
+];
+const SEED_CALENDAR = [
+  { date: '2025-01-14', type: 'Mercantile Holiday', hours: 0, description: 'Thai - Pongal Day' },
+  { date: '2025-04-13', type: 'Mercantile Holiday', hours: 0, description: 'Sinhala New Year' },
+  { date: '2025-04-14', type: 'Mercantile Holiday', hours: 0, description: 'Sinhala New Year' },
+  { date: '2025-05-01', type: 'Mercantile Holiday', hours: 0, description: 'May Day' },
+  { date: '2025-12-25', type: 'Mercantile Holiday', hours: 0, description: 'Christmas Day' },
+  { date: '2026-01-14', type: 'Mercantile Holiday', hours: 0, description: 'Thai - Pongal Day' },
+  { date: '2026-04-13', type: 'Mercantile Holiday', hours: 0, description: 'Sinhala New Year' },
+  { date: '2026-04-14', type: 'Mercantile Holiday', hours: 0, description: 'Sinhala New Year' },
+  { date: '2026-05-01', type: 'Mercantile Holiday', hours: 0, description: 'May Day' },
+  { date: '2026-12-25', type: 'Mercantile Holiday', hours: 0, description: 'Christmas Day' },
+];
+
+// ─── MF Tab definitions ───────────────────────────────────────────────────────
+const MF_TABS = [
+  { key: 'overview',     label: 'Overview',                      icon: BarChart2 },
+  { key: 'designation',  label: 'Designation Details',           icon: Tag },
+  { key: 'education',    label: 'Educational Details',           icon: BookOpen },
+  { key: 'professional', label: 'Professional Details',          icon: Briefcase },
+  { key: 'divdeploc',    label: 'Div / Dep / Loc',               icon: Building2 },
+  { key: 'shift',        label: 'Shift Details',                 icon: Clock },
+  { key: 'province',     label: 'Province / District / Electorate', icon: MapPin },
+  { key: 'police',       label: 'Police Station Details',        icon: Shield },
+  { key: 'calendar',     label: 'Calendar',                      icon: Calendar },
+];
+
+// ─── MF Section: Overview ─────────────────────────────────────────────────────
+function MFOverview({ setMfTab }) {
+  const cards = [
+    { key: 'designation', label: 'Designation Details', icon: Tag, count: SEED_DESIGNATIONS.length, color: 'bg-gold-50 text-gold-600', desc: 'Job titles, abbreviations & types' },
+    { key: 'education', label: 'Educational Details', icon: BookOpen, count: SEED_EDUCATION.length, color: 'bg-blue-50 text-blue-600', desc: 'Academic qualifications reference' },
+    { key: 'professional', label: 'Professional Details', icon: Briefcase, count: SEED_PROFESSIONAL.length, color: 'bg-purple-50 text-purple-600', desc: 'Professional certifications & degrees' },
+    { key: 'divdeploc', label: 'Div / Dep / Loc', icon: Building2, count: SEED_DIVISIONS.length + SEED_DEPARTMENTS.length, color: 'bg-orange-50 text-orange-600', desc: 'Organisational structure master data' },
+    { key: 'shift', label: 'Shift Details', icon: Clock, count: SEED_SHIFTS.length, color: 'bg-sky-50 text-sky-600', desc: 'Work shift configurations & rules' },
+    { key: 'province', label: 'Province / District', icon: MapPin, count: SEED_PROVINCES.length + SEED_DISTRICTS.length, color: 'bg-teal-50 text-teal-600', desc: 'Geographic administrative data' },
+    { key: 'police', label: 'Police Stations', icon: Shield, count: SEED_POLICE_STATIONS.length, color: 'bg-red-50 text-red-600', desc: 'Police station reference data' },
+    { key: 'calendar', label: 'Calendar', icon: Calendar, count: SEED_CALENDAR.length, color: 'bg-emerald-50 text-emerald-600', desc: 'Public & company holiday schedule' },
+  ];
+  const total = cards.reduce((a, c) => a + c.count, 0);
+  return (
+    <div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <StatCard label="Total Records" value={total} icon={Database} color="gold" />
+        <StatCard label="Designations" value={SEED_DESIGNATIONS.length} icon={Tag} color="blue" sub="All Active" />
+        <StatCard label="Holidays 2026" value={SEED_CALENDAR.filter(c => c.date.startsWith('2026')).length} icon={Calendar} color="green" />
+        <StatCard label="Police Stations" value={SEED_POLICE_STATIONS.length} icon={Shield} color="purple" />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {cards.map(c => (
+          <button key={c.key} onClick={() => setMfTab(c.key)}
+            className="bg-white border border-dark-100 rounded-xl p-5 text-left hover:border-gold-400 hover:shadow-md transition-all group">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${c.color}`}><c.icon size={20} /></div>
+            <p className="font-semibold text-dark-800 text-sm">{c.label}</p>
+            <p className="text-xs text-dark-400 mt-0.5 mb-2">{c.desc}</p>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-gold-600">{c.count} records</span>
+              <ChevronRight size={14} className="text-dark-300 group-hover:text-gold-400 transition-colors" />
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── MF Section: Designation ──────────────────────────────────────────────────
+function MFDesignation() {
+  const [rows, setRows] = useState(SEED_DESIGNATIONS);
+  const [search, setSearch] = useState('');
+  const [form, setForm] = useState({ code: '', description: '', abbr: '', type: 'Non Executive', status: 'Active' });
+  const [saved, setSaved] = useState(false);
+  const filtered = rows.filter(r => r.description.toLowerCase().includes(search.toLowerCase()) || r.code.includes(search));
+  const handleSave = () => {
+    if (!form.code || !form.description) return;
+    setRows(prev => { const idx = prev.findIndex(r => r.code === form.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...form }; return n; } return [...prev, { ...form }]; });
+    setSaved(true); setTimeout(() => setSaved(false), 1500);
+  };
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2 space-y-3">
+        <div className="relative"><Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400" /><input className="border border-dark-200 rounded-lg px-3 py-2 pl-8 text-xs w-full focus:outline-none focus:border-gold-400" placeholder="Search designations…" value={search} onChange={e => setSearch(e.target.value)} /></div>
+        <MFGridSection title="Designation Details">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Description','Abbreviation','Type','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {filtered.map((r, i) => (
+                <tr key={r.code} onClick={() => setForm({ code: r.code, description: r.description, abbr: r.abbr, type: r.type, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium max-w-xs truncate">{r.description}</td>
+                  <td className="px-3 py-1.5 text-dark-500 max-w-[120px] truncate">{r.abbr}</td>
+                  <td className="px-3 py-1.5"><span className={`px-2 py-0.5 rounded text-[10px] font-medium ${r.type === 'Executive' ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700'}`}>{r.type}</span></td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <MFEntryPanel title="Designation Entry" onSave={handleSave} onClear={() => setForm({ code: '', description: '', abbr: '', type: 'Non Executive', status: 'Active' })} saved={saved}>
+        <div><MFLabel req>Code</MFLabel><input className={MF_INP} value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} /></div>
+        <div><MFLabel req>Description</MFLabel><input className={MF_INP} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+        <div><MFLabel>Abbreviation</MFLabel><input className={MF_INP} value={form.abbr} onChange={e => setForm(f => ({ ...f, abbr: e.target.value }))} /></div>
+        <div><MFLabel>Type</MFLabel><select className={MF_SEL} value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}><option>Executive</option><option>Non Executive</option></select></div>
+        <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+      </MFEntryPanel>
+    </div>
+  );
+}
+
+// ─── MF Section: Education ────────────────────────────────────────────────────
+function MFEducation() {
+  const [rows, setRows] = useState(SEED_EDUCATION);
+  const [form, setForm] = useState({ code: '', country: 'SRI LANKA', description: '', conductedBy: '', status: 'Active' });
+  const [saved, setSaved] = useState(false);
+  const handleSave = () => {
+    if (!form.code || !form.description) return;
+    setRows(prev => { const idx = prev.findIndex(r => r.code === form.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...form }; return n; } return [...prev, { ...form }]; });
+    setSaved(true); setTimeout(() => setSaved(false), 1500);
+  };
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2">
+        <MFGridSection title="Educational Details">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Country','Description','Conducted By','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={r.code} onClick={() => setForm({ code: r.code, country: r.country, description: r.description, conductedBy: r.conductedBy, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-600">{r.country}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.description}</td>
+                  <td className="px-3 py-1.5 text-dark-500">{r.conductedBy}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <MFEntryPanel title="Education Entry" onSave={handleSave} onClear={() => setForm({ code: '', country: 'SRI LANKA', description: '', conductedBy: '', status: 'Active' })} saved={saved}>
+        <div><MFLabel req>Qualification Code</MFLabel><input className={MF_INP} value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} /></div>
+        <div><MFLabel>Country</MFLabel><select className={MF_SEL} value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))}><option>SRI LANKA</option><option>INDIA</option><option>UNITED KINGDOM</option><option>AUSTRALIA</option><option>USA</option></select></div>
+        <div><MFLabel req>Description</MFLabel><input className={MF_INP} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+        <div><MFLabel>Conducted By</MFLabel><input className={MF_INP} value={form.conductedBy} onChange={e => setForm(f => ({ ...f, conductedBy: e.target.value }))} /></div>
+        <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+      </MFEntryPanel>
+    </div>
+  );
+}
+
+// ─── MF Section: Professional ─────────────────────────────────────────────────
+function MFProfessional() {
+  const [rows, setRows] = useState(SEED_PROFESSIONAL);
+  const [form, setForm] = useState({ code: '', country: 'SRI LANKA', description: '', instituteName: '', duration: '', status: 'Active' });
+  const [saved, setSaved] = useState(false);
+  const handleSave = () => {
+    if (!form.code || !form.description) return;
+    setRows(prev => { const idx = prev.findIndex(r => r.code === form.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...form }; return n; } return [...prev, { ...form }]; });
+    setSaved(true); setTimeout(() => setSaved(false), 1500);
+  };
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2">
+        <MFGridSection title="Professional Details">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Country','Description','Institute','Duration','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={r.code} onClick={() => setForm({ code: r.code, country: r.country, description: r.description, instituteName: r.instituteName, duration: r.duration, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-600">{r.country}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium max-w-xs truncate">{r.description}</td>
+                  <td className="px-3 py-1.5 text-dark-500">{r.instituteName || '—'}</td>
+                  <td className="px-3 py-1.5 text-dark-500">{r.duration || '—'}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <MFEntryPanel title="Professional Entry" onSave={handleSave} onClear={() => setForm({ code: '', country: 'SRI LANKA', description: '', instituteName: '', duration: '', status: 'Active' })} saved={saved}>
+        <div><MFLabel req>Qualification Code</MFLabel><input className={MF_INP} value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} /></div>
+        <div><MFLabel>Country</MFLabel><select className={MF_SEL} value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))}><option>SRI LANKA</option><option>INDIA</option><option>UNITED KINGDOM</option><option>AUSTRALIA</option><option>USA</option></select></div>
+        <div><MFLabel req>Description</MFLabel><input className={MF_INP} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+        <div><MFLabel>Institute Name</MFLabel><input className={MF_INP} value={form.instituteName} onChange={e => setForm(f => ({ ...f, instituteName: e.target.value }))} /></div>
+        <div><MFLabel>Duration</MFLabel><input className={MF_INP} value={form.duration} onChange={e => setForm(f => ({ ...f, duration: e.target.value }))} /></div>
+        <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+      </MFEntryPanel>
+    </div>
+  );
+}
+
+// ─── MF Section: Div / Dep / Loc ─────────────────────────────────────────────
+function MFDivDepLoc() {
+  const today = new Date().toISOString().split('T')[0];
+  const [divisions, setDivisions] = useState(SEED_DIVISIONS);
+  const [departments, setDepartments] = useState(SEED_DEPARTMENTS);
+  const [locations, setLocations] = useState(SEED_LOCATIONS);
+  const [selDiv, setSelDiv] = useState('');
+  const [divForm, setDivForm] = useState({ code: '', description: '', effectiveDate: today, status: 'Active' });
+  const [deptForm, setDeptForm] = useState({ divCode: '', code: '', description: '', effectiveDate: today, status: 'Active' });
+  const [locForm, setLocForm] = useState({ divCode: '', deptCode: '', code: '', description: '', effectiveDate: today, status: 'Active' });
+  const filtDepts = selDiv ? departments.filter(d => d.divCode === selDiv) : departments;
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="space-y-4">
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-2">Division Filter</p>
+          <select className={MF_SEL} value={selDiv} onChange={e => setSelDiv(e.target.value)}>
+            <option value="">All Divisions</option>
+            {divisions.map(d => <option key={d.code} value={d.code}>{d.description}</option>)}
+          </select>
+        </div>
+        <MFGridSection title="Department Details">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Description','Effective Date','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {filtDepts.map((r, i) => (
+                <tr key={r.code + r.divCode} onClick={() => setDeptForm({ divCode: r.divCode, code: r.code, description: r.description, effectiveDate: r.effectiveDate, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.description}</td>
+                  <td className="px-3 py-1.5 text-dark-500">{r.effectiveDate}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+        <MFGridSection title="Location Details">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Description','Effective Date','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {locations.map((r, i) => (
+                <tr key={r.code} onClick={() => setLocForm({ divCode: r.divCode, deptCode: r.deptCode, code: r.code, description: r.description, effectiveDate: r.effectiveDate, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.description}</td>
+                  <td className="px-3 py-1.5 text-dark-500">{r.effectiveDate}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <div className="space-y-4">
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">Create New Division</p>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div><MFLabel req>Division Code</MFLabel><input className={MF_INP} value={divForm.code} onChange={e => setDivForm(f => ({ ...f, code: e.target.value }))} /></div>
+            <div><MFLabel req>Description</MFLabel><input className={MF_INP} value={divForm.description} onChange={e => setDivForm(f => ({ ...f, description: e.target.value }))} /></div>
+            <div><MFLabel>Effective Date</MFLabel><input className={MF_INP} type="date" value={divForm.effectiveDate} onChange={e => setDivForm(f => ({ ...f, effectiveDate: e.target.value }))} /></div>
+            <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={divForm.status} onChange={e => setDivForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => { if (!divForm.code) return; setDivisions(prev => { const idx = prev.findIndex(d => d.code === divForm.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...divForm }; return n; } return [...prev, { ...divForm }]; }); setDivForm({ code: '', description: '', effectiveDate: today, status: 'Active' }); }} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+            <button onClick={() => setDivForm({ code: '', description: '', effectiveDate: today, status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
           </div>
         </div>
-      )}
-      <div className="flex justify-end mt-4 pt-3 border-t border-dark-100">
-        <button onClick={onClose} className="btn-ghost">Close</button>
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">Create New Department</p>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div><MFLabel>Division Code</MFLabel><input className={MF_INP} value={deptForm.divCode} onChange={e => setDeptForm(f => ({ ...f, divCode: e.target.value }))} /></div>
+            <div><MFLabel req>Dept. Code</MFLabel><input className={MF_INP} value={deptForm.code} onChange={e => setDeptForm(f => ({ ...f, code: e.target.value }))} /></div>
+            <div className="col-span-2"><MFLabel req>Description</MFLabel><input className={MF_INP} value={deptForm.description} onChange={e => setDeptForm(f => ({ ...f, description: e.target.value }))} /></div>
+            <div><MFLabel>Effective Date</MFLabel><input className={MF_INP} type="date" value={deptForm.effectiveDate} onChange={e => setDeptForm(f => ({ ...f, effectiveDate: e.target.value }))} /></div>
+            <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={deptForm.status} onChange={e => setDeptForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => { if (!deptForm.code) return; setDepartments(prev => { const idx = prev.findIndex(d => d.code === deptForm.code && d.divCode === deptForm.divCode); if (idx >= 0) { const n = [...prev]; n[idx] = { ...deptForm }; return n; } return [...prev, { ...deptForm }]; }); setDeptForm({ divCode: '', code: '', description: '', effectiveDate: today, status: 'Active' }); }} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+            <button onClick={() => setDeptForm({ divCode: '', code: '', description: '', effectiveDate: today, status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
+          </div>
+        </div>
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">Create New Location</p>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div><MFLabel>Division Code</MFLabel><input className={MF_INP} value={locForm.divCode} onChange={e => setLocForm(f => ({ ...f, divCode: e.target.value }))} /></div>
+            <div><MFLabel>Dept. Code</MFLabel><input className={MF_INP} value={locForm.deptCode} onChange={e => setLocForm(f => ({ ...f, deptCode: e.target.value }))} /></div>
+            <div><MFLabel req>Location Code</MFLabel><input className={MF_INP} value={locForm.code} onChange={e => setLocForm(f => ({ ...f, code: e.target.value }))} /></div>
+            <div><MFLabel req>Description</MFLabel><input className={MF_INP} value={locForm.description} onChange={e => setLocForm(f => ({ ...f, description: e.target.value }))} /></div>
+            <div><MFLabel>Effective Date</MFLabel><input className={MF_INP} type="date" value={locForm.effectiveDate} onChange={e => setLocForm(f => ({ ...f, effectiveDate: e.target.value }))} /></div>
+            <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={locForm.status} onChange={e => setLocForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => { if (!locForm.code) return; setLocations(prev => { const idx = prev.findIndex(l => l.code === locForm.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...locForm }; return n; } return [...prev, { ...locForm }]; }); setLocForm({ divCode: '', deptCode: '', code: '', description: '', effectiveDate: today, status: 'Active' }); }} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+            <button onClick={() => setLocForm({ divCode: '', deptCode: '', code: '', description: '', effectiveDate: today, status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── MF Section: Shift ────────────────────────────────────────────────────────
+function MFShift() {
+  const [shifts, setShifts] = useState(SEED_SHIFTS);
+  const [form, setForm] = useState({ code: '', description: '', type: 'Normal', timeIn: '08:00', timeOut: '17:00', status: 'Active' });
+  const [saved, setSaved] = useState(false);
+  const handleSave = () => {
+    if (!form.code) return;
+    setShifts(prev => { const idx = prev.findIndex(s => s.code === form.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...form }; return n; } return [...prev, { ...form }]; });
+    setSaved(true); setTimeout(() => setSaved(false), 1500);
+  };
+  return (
+    <div className="space-y-4">
+      <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+        <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">Shift Type Entry</p>
+        {saved && <div className="flex items-center gap-1 text-emerald-600 text-xs mb-2"><CheckCircle size={12}/> Saved!</div>}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-end">
+          <div><MFLabel req>Shift Code</MFLabel><input className={MF_INP} value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} /></div>
+          <div className="col-span-2"><MFLabel>Description</MFLabel><input className={MF_INP} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+          <div><MFLabel>Type</MFLabel><select className={MF_SEL} value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}><option>Normal</option><option>Rotating</option><option>Flexible</option></select></div>
+          <div><MFLabel>Time In</MFLabel><input className={MF_INP} type="time" value={form.timeIn} onChange={e => setForm(f => ({ ...f, timeIn: e.target.value }))} /></div>
+          <div><MFLabel>Time Out</MFLabel><input className={MF_INP} type="time" value={form.timeOut} onChange={e => setForm(f => ({ ...f, timeOut: e.target.value }))} /></div>
+        </div>
+        <div className="flex gap-2 mt-3">
+          <button onClick={handleSave} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+          <button onClick={() => setForm({ code: '', description: '', type: 'Normal', timeIn: '08:00', timeOut: '17:00', status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
+        </div>
+      </div>
+      <MFGridSection title="Defined Shifts">
+        <table className="w-full text-xs">
+          <thead><tr className="bg-dark-50 border-b border-dark-100">{['Shift Code','Description','Type','Time In','Time Out','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+          <tbody>
+            {shifts.map((r, i) => (
+              <tr key={r.code} onClick={() => setForm({ code: r.code, description: r.description, type: r.type, timeIn: r.timeIn, timeOut: r.timeOut, status: r.status })}
+                className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                <td className="px-3 py-1.5 text-dark-800 font-medium">{r.description}</td>
+                <td className="px-3 py-1.5 text-dark-500">{r.type}</td>
+                <td className="px-3 py-1.5 text-dark-600">{r.timeIn}</td>
+                <td className="px-3 py-1.5 text-dark-600">{r.timeOut}</td>
+                <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </MFGridSection>
+    </div>
+  );
+}
+
+// ─── MF Section: Province ─────────────────────────────────────────────────────
+function MFProvince() {
+  const [provinces, setProvinces] = useState(SEED_PROVINCES);
+  const [districts, setDistricts] = useState(SEED_DISTRICTS);
+  const [electorates, setElectorates] = useState(SEED_ELECTORATES);
+  const [provForm, setProvForm] = useState({ code: '', name: '', status: 'Active' });
+  const [distForm, setDistForm] = useState({ code: '', name: '', status: 'Active' });
+  const [elecForm, setElecForm] = useState({ code: '', name: '', status: 'Active' });
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="space-y-4">
+        <MFGridSection title="Districts">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Prov. Code','Province','Dist. Code','District','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {districts.map((r, i) => (
+                <tr key={r.code} onClick={() => setDistForm({ code: r.code, name: r.name, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.provCode}</td>
+                  <td className="px-3 py-1.5 text-dark-600">{r.provName}</td>
+                  <td className="px-3 py-1.5 font-mono text-dark-700 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.name}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+        <MFGridSection title="Electorates">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Prov.','Dist.','Code','Name','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {electorates.map((r, i) => (
+                <tr key={r.code} onClick={() => setElecForm({ code: r.code, name: r.name, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600">{r.provCode}</td>
+                  <td className="px-3 py-1.5 font-mono text-dark-600">{r.distCode}</td>
+                  <td className="px-3 py-1.5 font-mono text-dark-700 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.name}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <div className="space-y-4">
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">Province Entry</p>
+          <div className="grid grid-cols-3 gap-2 mb-3 items-end">
+            <div><MFLabel req>Code</MFLabel><input className={MF_INP} value={provForm.code} onChange={e => setProvForm(f => ({ ...f, code: e.target.value }))} placeholder="e.g. WP" /></div>
+            <div className="col-span-2"><MFLabel>Name</MFLabel><input className={MF_INP} value={provForm.name} onChange={e => setProvForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={provForm.status} onChange={e => setProvForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => { if (!provForm.code) return; setProvinces(prev => { const idx = prev.findIndex(p => p.code === provForm.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...provForm }; return n; } return [...prev, { ...provForm }]; }); setProvForm({ code: '', name: '', status: 'Active' }); }} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+            <button onClick={() => setProvForm({ code: '', name: '', status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
+          </div>
+        </div>
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">District Entry</p>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div><MFLabel req>District Code</MFLabel><input className={MF_INP} value={distForm.code} onChange={e => setDistForm(f => ({ ...f, code: e.target.value }))} /></div>
+            <div><MFLabel req>District Name</MFLabel><input className={MF_INP} value={distForm.name} onChange={e => setDistForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={distForm.status} onChange={e => setDistForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => { if (!distForm.code) return; setDistricts(prev => { const idx = prev.findIndex(d => d.code === distForm.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...distForm, provCode: 'WP', provName: 'Western Province' }; return n; } return [...prev, { ...distForm, provCode: 'WP', provName: 'Western Province' }]; }); setDistForm({ code: '', name: '', status: 'Active' }); }} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+            <button onClick={() => setDistForm({ code: '', name: '', status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
+          </div>
+        </div>
+        <div className="bg-white border border-dark-100 rounded-xl p-4 shadow-sm">
+          <p className="text-xs font-bold text-gold-600 uppercase tracking-widest mb-3 border-b border-gold-100 pb-2">Electorate Entry</p>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div><MFLabel req>Electorate Code</MFLabel><input className={MF_INP} value={elecForm.code} onChange={e => setElecForm(f => ({ ...f, code: e.target.value }))} /></div>
+            <div><MFLabel req>Electorate Name</MFLabel><input className={MF_INP} value={elecForm.name} onChange={e => setElecForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={elecForm.status} onChange={e => setElecForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => { if (!elecForm.code) return; setElectorates(prev => { const idx = prev.findIndex(e => e.code === elecForm.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...elecForm, provCode: 'WP', distCode: 'CMB' }; return n; } return [...prev, { ...elecForm, provCode: 'WP', distCode: 'CMB' }]; }); setElecForm({ code: '', name: '', status: 'Active' }); }} className="flex items-center gap-1 bg-dark-800 text-gold-400 text-xs px-3 py-1.5 rounded hover:bg-dark-700"><Save size={11} /> Save</button>
+            <button onClick={() => setElecForm({ code: '', name: '', status: 'Active' })} className="flex items-center gap-1 border border-dark-200 text-dark-500 text-xs px-3 py-1.5 rounded hover:bg-dark-50"><RotateCcw size={11} /> Clear</button>
+          </div>
+        </div>
+        <MFGridSection title="All Provinces">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Province Name','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {provinces.map((r, i) => (
+                <tr key={r.code} onClick={() => setProvForm({ code: r.code, name: r.name, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.name}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+    </div>
+  );
+}
+
+// ─── MF Section: Police ───────────────────────────────────────────────────────
+function MFPolice() {
+  const [stations, setStations] = useState(SEED_POLICE_STATIONS);
+  const [form, setForm] = useState({ code: '', electorateCode: '', name: '', status: 'Active' });
+  const [search, setSearch] = useState('');
+  const [saved, setSaved] = useState(false);
+  const filtered = stations.filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.code.includes(search));
+  const handleSave = () => {
+    if (!form.code || !form.name) return;
+    setStations(prev => { const idx = prev.findIndex(s => s.code === form.code); if (idx >= 0) { const n = [...prev]; n[idx] = { ...form }; return n; } return [...prev, { ...form }]; });
+    setSaved(true); setTimeout(() => setSaved(false), 1500);
+  };
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2 space-y-3">
+        <div className="relative"><Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400" /><input className="border border-dark-200 rounded-lg px-3 py-2 pl-8 text-xs w-full focus:outline-none focus:border-gold-400" placeholder="Search stations…" value={search} onChange={e => setSearch(e.target.value)} /></div>
+        <MFGridSection title="Police Station Details">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Code','Electorate','Station Name','Status'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {filtered.map((r, i) => (
+                <tr key={r.code} onClick={() => setForm({ code: r.code, electorateCode: r.electorateCode, name: r.name, status: r.status })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.code}</td>
+                  <td className="px-3 py-1.5 text-dark-600">{r.electorateCode}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.name}</td>
+                  <td className="px-3 py-1.5"><Badge status={r.status} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <MFEntryPanel title="Police Station Entry" onSave={handleSave} onClear={() => setForm({ code: '', electorateCode: '', name: '', status: 'Active' })} saved={saved}>
+        <div><MFLabel req>Code</MFLabel><input className={MF_INP} value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} /></div>
+        <div><MFLabel>Electorate</MFLabel><select className={MF_SEL} value={form.electorateCode} onChange={e => setForm(f => ({ ...f, electorateCode: e.target.value }))}><option value="">Select...</option>{SEED_ELECTORATES.map(e => <option key={e.code} value={e.code}>{e.name}</option>)}</select></div>
+        <div><MFLabel req>Station Name</MFLabel><input className={MF_INP} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
+        <div><MFLabel>Status</MFLabel><select className={MF_SEL} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}><option>Active</option><option>Inactive</option></select></div>
+      </MFEntryPanel>
+    </div>
+  );
+}
+
+// ─── MF Section: Calendar ─────────────────────────────────────────────────────
+function MFCalendar() {
+  const today = new Date().toISOString().split('T')[0];
+  const [holidays, setHolidays] = useState(SEED_CALENDAR);
+  const [form, setForm] = useState({ date: today, type: '', hours: 0, description: '' });
+  const [saved, setSaved] = useState(false);
+  const handleSave = () => {
+    if (!form.date || !form.type) return;
+    setHolidays(prev => { const idx = prev.findIndex(h => h.date === form.date); if (idx >= 0) { const n = [...prev]; n[idx] = { ...form }; return n; } return [...prev, { ...form }].sort((a, b) => a.date.localeCompare(b.date)); });
+    setSaved(true); setTimeout(() => setSaved(false), 1500);
+  };
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2">
+        <MFGridSection title="Calendar — Holiday Schedule">
+          <table className="w-full text-xs">
+            <thead><tr className="bg-dark-50 border-b border-dark-100">{['Date','Type','Hours','Description'].map(h => <th key={h} className="px-3 py-2 text-left text-[10px] font-semibold text-dark-500 uppercase tracking-wide whitespace-nowrap">{h}</th>)}</tr></thead>
+            <tbody>
+              {holidays.map((r, i) => (
+                <tr key={r.date + r.type} onClick={() => setForm({ date: r.date, type: r.type, hours: r.hours, description: r.description })}
+                  className={`border-b border-dark-50 cursor-pointer hover:bg-gold-50 transition-colors ${i === 0 ? 'bg-gold-50/50' : ''}`}>
+                  <td className="px-3 py-1.5 font-mono text-gold-600 font-semibold">{r.date}</td>
+                  <td className="px-3 py-1.5">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${r.type === 'Mercantile Holiday' ? 'bg-orange-100 text-orange-700' : r.type === 'Poya Day' ? 'bg-purple-100 text-purple-700' : r.type === 'Company Holiday' ? 'bg-blue-100 text-blue-700' : r.type === 'Half Day' ? 'bg-yellow-100 text-yellow-700' : 'bg-dark-100 text-dark-600'}`}>{r.type}</span>
+                  </td>
+                  <td className="px-3 py-1.5 text-dark-500">{r.hours}</td>
+                  <td className="px-3 py-1.5 text-dark-800 font-medium">{r.description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </MFGridSection>
+      </div>
+      <MFEntryPanel title="Holiday Entry" onSave={handleSave} onClear={() => setForm({ date: today, type: '', hours: 0, description: '' })} saved={saved}>
+        <div><MFLabel req>Date</MFLabel><input className={MF_INP} type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} /></div>
+        <div><MFLabel req>Type</MFLabel><select className={MF_SEL} value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}><option value="">Select...</option><option>Mercantile Holiday</option><option>Poya Day</option><option>Company Holiday</option><option>Half Day</option><option>Bank Holiday</option></select></div>
+        <div><MFLabel>No. of Hours</MFLabel><input className={MF_INP} type="number" min="0" max="12" value={form.hours} onChange={e => setForm(f => ({ ...f, hours: parseInt(e.target.value) }))} /></div>
+        <div><MFLabel>Description</MFLabel><input className={MF_INP} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+      </MFEntryPanel>
+    </div>
+  );
+}
+
+// ─── Master Files Main View (embedded in HRM) ─────────────────────────────────
+function HRMasterFilesView() {
+  const [mfTab, setMfTab] = useState('overview');
+  const activeTab = MF_TABS.find(t => t.key === mfTab);
+
+  const renderContent = () => {
+    switch (mfTab) {
+      case 'overview':     return <MFOverview setMfTab={setMfTab} />;
+      case 'designation':  return <MFDesignation />;
+      case 'education':    return <MFEducation />;
+      case 'professional': return <MFProfessional />;
+      case 'divdeploc':    return <MFDivDepLoc />;
+      case 'shift':        return <MFShift />;
+      case 'province':     return <MFProvince />;
+      case 'police':       return <MFPolice />;
+      case 'calendar':     return <MFCalendar />;
+      default:             return null;
+    }
+  };
+
+  return (
+    <div className="-mx-4 lg:-mx-6 -mt-2 flex min-h-screen">
+      {/* Left sidebar — dark themed matching HRM */}
+      <div className="w-48 shrink-0 bg-dark-900 border-r border-dark-700 flex flex-col">
+        <div className="px-4 py-3 border-b border-dark-700">
+          <div className="flex items-center gap-2">
+            <Database size={14} className="text-gold-400 shrink-0" />
+            <div>
+              <p className="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Master Files</p>
+              <p className="text-dark-400 text-[9px] mt-0.5">Data File Maintenance</p>
+            </div>
+          </div>
+        </div>
+        <nav className="flex-1 py-2">
+          {MF_TABS.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setMfTab(t.key)}
+              className={`w-full flex items-start gap-2 px-3 py-2 text-left text-xs font-medium transition-all border-l-2
+                ${mfTab === t.key
+                  ? 'bg-gold-500/20 text-gold-400 border-l-gold-400'
+                  : 'text-dark-400 hover:bg-dark-700 hover:text-white border-l-transparent'
+                }`}
+            >
+              <t.icon size={12} className="shrink-0 mt-0.5" />
+              <span className="leading-tight">{t.label}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Main content area */}
+      <div className="flex-1 overflow-auto bg-gray-50/50">
+        <div className="p-4 lg:p-6">
+          {/* Breadcrumb header */}
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <div className="flex items-center gap-2 text-xs text-dark-400 mb-1">
+                <span>eHRM</span>
+                <ChevronRight size={10} />
+                <span>Master Files</span>
+                <ChevronRight size={10} />
+                <span className="text-gold-600 font-semibold">{activeTab?.label}</span>
+              </div>
+              <h1 className="text-xl font-bold text-dark-900">{activeTab?.label}</h1>
+            </div>
+            {mfTab !== 'overview' && (
+              <button
+                onClick={() => setMfTab('overview')}
+                className="flex items-center gap-1 text-xs text-dark-500 hover:text-gold-600 border border-dark-200 rounded-lg px-3 py-1.5 transition-colors hover:border-gold-400"
+              >
+                ← Back to Overview
+              </button>
+            )}
+          </div>
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
@@ -586,8 +1012,6 @@ export default function HRMPage() {
   const dispatch = useDispatch();
   const { employees, attendance, leaveRequests, payroll, recruitment, training, disciplinary, hrAssets, exits, loading } = useSelector(s => s.hr);
   const { activeModule: reduxActiveModule } = useSelector(s => s.ui);
-
-  // Use redux activeModule; default to 'overview' if null or not set by HR nav
   const activeModule = reduxActiveModule || 'overview';
 
   const [search, setSearch] = useState('');
@@ -624,11 +1048,7 @@ export default function HRMPage() {
     return name.includes(q) || (e.department || '').toLowerCase().includes(q) || (e.id || '').toLowerCase().includes(q);
   });
 
-  const empName = (id) => {
-    const e = employees.find(x => x.id === id);
-    return e ? `${e.firstName || ''} ${e.lastName || e.name || ''}`.trim() : id;
-  };
-
+  const empName = (id) => { const e = employees.find(x => x.id === id); return e ? `${e.firstName || ''} ${e.lastName || e.name || ''}`.trim() : id; };
   const setLF = (k, v) => setLeaveForm(f => ({ ...f, [k]: v }));
   const setRF = (k, v) => setRecruitForm(f => ({ ...f, [k]: v }));
   const setTF = (k, v) => setTrainingForm(f => ({ ...f, [k]: v }));
@@ -638,7 +1058,6 @@ export default function HRMPage() {
 
   const inputCls = "input-field text-sm";
   const selectCls = "input-field text-sm";
-
   const activeCount = employees.filter(e => e.status === 'Active').length;
   const presentCount = attendance.filter(a => a.status === 'Present').length;
   const pendingLeave = leaveRequests.filter(l => l.status === 'Pending').length;
@@ -673,9 +1092,7 @@ export default function HRMPage() {
                   return (
                     <div key={dept} className="flex items-center gap-3 mb-2.5">
                       <span className="text-xs text-dark-600 w-32 truncate">{dept}</span>
-                      <div className="flex-1 h-2 bg-dark-100 rounded-full overflow-hidden">
-                        <div className="h-full gold-gradient rounded-full" style={{ width: `${pct}%` }} />
-                      </div>
+                      <div className="flex-1 h-2 bg-dark-100 rounded-full overflow-hidden"><div className="h-full gold-gradient rounded-full" style={{ width: `${pct}%` }} /></div>
                       <span className="text-xs font-semibold text-dark-700 w-5 text-right">{count}</span>
                     </div>
                   );
@@ -704,6 +1121,7 @@ export default function HRMPage() {
                     { label: 'Post Vacancy', action: () => { dispatch(setActiveModule('recruitment')); setShowRecruitModal(true); }, icon: Briefcase },
                     { label: 'Approve Leave', action: () => dispatch(setActiveModule('leave')), icon: Calendar },
                     { label: 'Run Payroll', action: () => dispatch(setActiveModule('payroll')), icon: DollarSign },
+                    { label: 'Master Files', action: () => dispatch(setActiveModule('masterfiles')), icon: Database },
                   ].map(({ label, action, icon: Icon }) => (
                     <button key={label} onClick={action}
                       className="w-full flex items-center gap-2 px-4 py-2.5 bg-dark-50 hover:bg-gold-50 hover:border-gold-300 border border-transparent rounded-lg text-sm font-medium text-dark-700 transition-all">
@@ -720,19 +1138,11 @@ export default function HRMPage() {
         {activeModule === 'employees' && (
           <div>
             <PageHeader title="Employee Management" subtitle="Master data, records & documents"
-              actions={
-                <button onClick={() => setShowAddEmployee(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> Add Employee
-                </button>
-              }
+              actions={<button onClick={() => setShowAddEmployee(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> Add Employee</button>}
             />
-            <div className="mb-4">
-              <SearchBar value={search} onChange={setSearch} placeholder="Search by name, ID, department..." />
-            </div>
+            <div className="mb-4"><SearchBar value={search} onChange={setSearch} placeholder="Search by name, ID, department..." /></div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filtered.map(e => (
-                <EmployeeSummaryCard key={e.id} emp={e} onClick={setViewEmployee} />
-              ))}
+              {filtered.map(e => <EmployeeSummaryCard key={e.id} emp={e} onClick={setViewEmployee} />)}
               {filtered.length === 0 && <div className="col-span-3"><EmptyState title="No employees found" icon={Users} /></div>}
             </div>
           </div>
@@ -742,11 +1152,7 @@ export default function HRMPage() {
         {activeModule === 'recruitment' && (
           <div>
             <PageHeader title="Recruitment & Onboarding" subtitle="Vacancies, applicants, interviews, selection"
-              actions={
-                <button onClick={() => setShowRecruitModal(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> Post Vacancy
-                </button>
-              }
+              actions={<button onClick={() => setShowRecruitModal(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> Post Vacancy</button>}
             />
             <div className="grid grid-cols-3 gap-4 mb-5">
               <StatCard label="Active Vacancies" value={recruitment.filter(r=>r.status==='Active').length} icon={Briefcase} color="blue" />
@@ -772,6 +1178,9 @@ export default function HRMPage() {
             </Card>
           </div>
         )}
+
+        {/* ═══ MASTER FILES ═══ */}
+        {activeModule === 'masterfiles' && <HRMasterFilesView />}
 
         {/* ═══ ATTENDANCE ═══ */}
         {activeModule === 'attendance' && (
@@ -812,11 +1221,7 @@ export default function HRMPage() {
         {activeModule === 'leave' && (
           <div>
             <PageHeader title="Leave Management" subtitle="Requests, approvals, balances"
-              actions={
-                <button onClick={() => setShowLeaveModal(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> New Request
-                </button>
-              }
+              actions={<button onClick={() => setShowLeaveModal(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> New Request</button>}
             />
             <div className="grid grid-cols-4 gap-4 mb-5">
               {['Annual','Medical','Casual','Unpaid'].map(type => (
@@ -841,14 +1246,8 @@ export default function HRMPage() {
                     <td className="px-4 py-3">
                       {l.status === 'Pending' && (
                         <div className="flex gap-1">
-                          <button onClick={() => dispatch(approveLeave(l))}
-                            className="p-1.5 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition-colors" title="Approve">
-                            <Check size={12} />
-                          </button>
-                          <button onClick={() => dispatch(rejectLeave(l))}
-                            className="p-1.5 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors" title="Reject">
-                            <X size={12} />
-                          </button>
+                          <button onClick={() => dispatch(approveLeave(l))} className="p-1.5 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition-colors" title="Approve"><Check size={12} /></button>
+                          <button onClick={() => dispatch(rejectLeave(l))} className="p-1.5 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors" title="Reject"><X size={12} /></button>
                         </div>
                       )}
                     </td>
@@ -898,29 +1297,19 @@ export default function HRMPage() {
             <PageHeader title="Performance Management" subtitle="KPIs, appraisals, reviews" />
             <div className="grid grid-cols-3 gap-5">
               <Card className="col-span-3">
-                <p className="text-dark-500 text-sm text-center py-8">Performance appraisal cycles, KPI settings and employee reviews will be managed here. Configure KPI targets per department and run quarterly/annual reviews.</p>
+                <p className="text-dark-500 text-sm text-center py-8">Performance appraisal cycles, KPI settings and employee reviews will be managed here.</p>
                 <div className="grid grid-cols-3 gap-4">
                   {employees.slice(0,3).map(e => (
                     <div key={e.id} className="border border-dark-100 rounded-xl p-4">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 gold-gradient rounded-full flex items-center justify-center shrink-0">
-                          <span className="text-dark-900 font-bold text-sm">{(e.firstName||e.name||'?')[0]}</span>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-dark-800 text-sm">{e.firstName} {e.lastName}</p>
-                          <p className="text-xs text-dark-400">{e.designation}</p>
-                        </div>
+                        <div className="w-10 h-10 gold-gradient rounded-full flex items-center justify-center shrink-0"><span className="text-dark-900 font-bold text-sm">{(e.firstName||e.name||'?')[0]}</span></div>
+                        <div><p className="font-semibold text-dark-800 text-sm">{e.firstName} {e.lastName}</p><p className="text-xs text-dark-400">{e.designation}</p></div>
                       </div>
                       <div className="space-y-2">
                         {['KPI Achievement','Attendance','Targets Met'].map((kpi,i) => (
                           <div key={kpi}>
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-dark-500">{kpi}</span>
-                              <span className="font-medium text-dark-700">{[88,95,75][i]}%</span>
-                            </div>
-                            <div className="h-1.5 bg-dark-100 rounded-full">
-                              <div className="h-full gold-gradient rounded-full" style={{width:`${[88,95,75][i]}%`}} />
-                            </div>
+                            <div className="flex justify-between text-xs mb-1"><span className="text-dark-500">{kpi}</span><span className="font-medium text-dark-700">{[88,95,75][i]}%</span></div>
+                            <div className="h-1.5 bg-dark-100 rounded-full"><div className="h-full gold-gradient rounded-full" style={{width:`${[88,95,75][i]}%`}} /></div>
                           </div>
                         ))}
                       </div>
@@ -936,11 +1325,7 @@ export default function HRMPage() {
         {activeModule === 'training' && (
           <div>
             <PageHeader title="Training & Development" subtitle="Programs, skills, certifications"
-              actions={
-                <button onClick={() => setShowTrainingModal(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> Add Training
-                </button>
-              }
+              actions={<button onClick={() => setShowTrainingModal(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> Add Training</button>}
             />
             <div className="grid grid-cols-3 gap-4 mb-5">
               <StatCard label="Total Programs" value={training.length} icon={BookOpen} color="blue" />
@@ -978,13 +1363,8 @@ export default function HRMPage() {
                 { label: 'My Attendance', icon: Clock, desc: 'View attendance history', color: 'gold', action: () => dispatch(setActiveModule('attendance')) },
                 { label: 'Update Profile', icon: User, desc: 'Update personal details', color: 'purple' },
               ].map(({ label, icon: Icon, desc, color, action }) => (
-                <div key={label} onClick={action}
-                  className="bg-white border border-dark-100 rounded-xl p-5 cursor-pointer hover:border-gold-400 hover:shadow-md transition-all">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${
-                    color==='blue'?'bg-blue-100 text-blue-600':color==='green'?'bg-emerald-100 text-emerald-600':
-                    color==='gold'?'bg-gold-100 text-gold-600':'bg-purple-100 text-purple-600'}`}>
-                    <Icon size={20} />
-                  </div>
+                <div key={label} onClick={action} className="bg-white border border-dark-100 rounded-xl p-5 cursor-pointer hover:border-gold-400 hover:shadow-md transition-all">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${color==='blue'?'bg-blue-100 text-blue-600':color==='green'?'bg-emerald-100 text-emerald-600':color==='gold'?'bg-gold-100 text-gold-600':'bg-purple-100 text-purple-600'}`}><Icon size={20} /></div>
                   <p className="font-semibold text-dark-800 text-sm">{label}</p>
                   <p className="text-xs text-dark-400 mt-0.5">{desc}</p>
                 </div>
@@ -997,11 +1377,7 @@ export default function HRMPage() {
         {activeModule === 'disciplinary' && (
           <div>
             <PageHeader title="Disciplinary & Grievance" subtitle="Warnings, actions, incident tracking"
-              actions={
-                <button onClick={() => setShowDiscModal(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> New Action
-                </button>
-              }
+              actions={<button onClick={() => setShowDiscModal(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> New Action</button>}
             />
             <Card noPad>
               <Table headers={['Ref', 'Employee', 'Type', 'Reason', 'Date', 'Issued By', 'Status']}>
@@ -1026,11 +1402,7 @@ export default function HRMPage() {
         {activeModule === 'hrassets' && (
           <div>
             <PageHeader title="Asset Management (HR)" subtitle="Company assets assigned to employees"
-              actions={
-                <button onClick={() => setShowAssetModal(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> Assign Asset
-                </button>
-              }
+              actions={<button onClick={() => setShowAssetModal(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> Assign Asset</button>}
             />
             <Card noPad>
               <Table headers={['Ref', 'Employee', 'Asset Type', 'Asset ID', 'Issued Date', 'Return Date', 'Condition', 'Status']}>
@@ -1056,11 +1428,7 @@ export default function HRMPage() {
         {activeModule === 'exit' && (
           <div>
             <PageHeader title="Exit Management" subtitle="Resignations, clearance, final settlement"
-              actions={
-                <button onClick={() => setShowExitModal(true)} className="btn-primary flex items-center gap-2">
-                  <Plus size={14} /> New Exit
-                </button>
-              }
+              actions={<button onClick={() => setShowExitModal(true)} className="btn-primary flex items-center gap-2"><Plus size={14} /> New Exit</button>}
             />
             <Card noPad>
               <Table headers={['Ref', 'Employee', 'Designation', 'Dept', 'Resign Date', 'Last Day', 'Reason', 'Final Settlement', 'Clearance', 'Status']}>
@@ -1098,16 +1466,10 @@ export default function HRMPage() {
                 { title: 'Training Report', desc: 'Completed trainings and skill development', icon: BookOpen, color: 'green' },
               ].map(({ title, desc, icon: Icon, color }) => (
                 <div key={title} className="bg-white border border-dark-100 rounded-xl p-5 hover:border-gold-400 hover:shadow-md transition-all cursor-pointer">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${
-                    color==='blue'?'bg-blue-100 text-blue-600':color==='green'?'bg-emerald-100 text-emerald-600':
-                    color==='gold'?'bg-gold-100 text-gold-600':'bg-purple-100 text-purple-600'}`}>
-                    <Icon size={20} />
-                  </div>
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${color==='blue'?'bg-blue-100 text-blue-600':color==='green'?'bg-emerald-100 text-emerald-600':color==='gold'?'bg-gold-100 text-gold-600':'bg-purple-100 text-purple-600'}`}><Icon size={20} /></div>
                   <p className="font-semibold text-dark-800 text-sm">{title}</p>
                   <p className="text-xs text-dark-400 mt-1">{desc}</p>
-                  <button className="mt-3 text-xs text-gold-600 font-medium hover:text-gold-700 flex items-center gap-1">
-                    Generate <ChevronRight size={12} />
-                  </button>
+                  <button className="mt-3 text-xs text-gold-600 font-medium hover:text-gold-700 flex items-center gap-1">Generate <ChevronRight size={12} /></button>
                 </div>
               ))}
             </div>
@@ -1116,66 +1478,36 @@ export default function HRMPage() {
       </div>
 
       {/* ══════════════════════ MODALS ══════════════════════ */}
-
-      {/* Add Employee – full-page-like modal */}
       <Modal open={showAddEmployee} onClose={() => setShowAddEmployee(false)} title="Employee Information — Add New Employee" size="xl">
         <AddEmployeeForm onClose={() => setShowAddEmployee(false)} onSave={(data) => dispatch(createEmployee(data))} employees={employees} />
       </Modal>
-
-      {/* View Employee Detail */}
       <Modal open={!!viewEmployee} onClose={() => setViewEmployee(null)} title="Employee Information" size="xl">
         {viewEmployee && <EmployeeDetailView emp={viewEmployee} onClose={() => setViewEmployee(null)} />}
       </Modal>
-
-      {/* New Leave Request */}
       <Modal open={showLeaveModal} onClose={() => setShowLeaveModal(false)} title="New Leave Request">
         <div className="space-y-4">
-          <FormField label="Employee" required>
-            <select className={selectCls} value={leaveForm.employeeId} onChange={e => setLF('employeeId', e.target.value)}>
-              <option value="">Select Employee...</option>
-              {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName} ({e.id})</option>)}
-            </select>
-          </FormField>
+          <FormField label="Employee" required><select className={selectCls} value={leaveForm.employeeId} onChange={e => setLF('employeeId', e.target.value)}><option value="">Select Employee...</option>{employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName} ({e.id})</option>)}</select></FormField>
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Leave Type" required>
-              <select className={selectCls} value={leaveForm.type} onChange={e => setLF('type', e.target.value)}>
-                {['Annual','Casual','Medical','Unpaid','Maternity','Paternity'].map(t => <option key={t}>{t}</option>)}
-              </select>
-            </FormField>
-            <FormField label="No. of Days" required>
-              <input className={inputCls} type="number" min="1" value={leaveForm.days} onChange={e => setLF('days', parseInt(e.target.value))} />
-            </FormField>
+            <FormField label="Leave Type" required><select className={selectCls} value={leaveForm.type} onChange={e => setLF('type', e.target.value)}>{['Annual','Casual','Medical','Unpaid','Maternity','Paternity'].map(t => <option key={t}>{t}</option>)}</select></FormField>
+            <FormField label="No. of Days" required><input className={inputCls} type="number" min="1" value={leaveForm.days} onChange={e => setLF('days', parseInt(e.target.value))} /></FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="From Date" required><input className={inputCls} type="date" value={leaveForm.from} onChange={e => setLF('from', e.target.value)} /></FormField>
             <FormField label="To Date" required><input className={inputCls} type="date" value={leaveForm.to} onChange={e => setLF('to', e.target.value)} /></FormField>
           </div>
-          <FormField label="Reason">
-            <textarea className={inputCls + ' h-20 resize-none'} value={leaveForm.reason} onChange={e => setLF('reason', e.target.value)} placeholder="Reason for leave..." />
-          </FormField>
+          <FormField label="Reason"><textarea className={inputCls + ' h-20 resize-none'} value={leaveForm.reason} onChange={e => setLF('reason', e.target.value)} placeholder="Reason for leave..." /></FormField>
           <div className="flex justify-end gap-3 pt-2">
             <button onClick={() => setShowLeaveModal(false)} className="btn-ghost">Cancel</button>
             <button onClick={() => { dispatch(createLeaveRequest({ ...leaveForm, employeeName: empName(leaveForm.employeeId) })); setShowLeaveModal(false); }} className="btn-primary">Submit Request</button>
           </div>
         </div>
       </Modal>
-
-      {/* Post Vacancy */}
       <Modal open={showRecruitModal} onClose={() => setShowRecruitModal(false)} title="Post New Vacancy">
         <div className="space-y-4">
-          <FormField label="Position Title" required>
-            <input className={inputCls} value={recruitForm.position} onChange={e => setRF('position', e.target.value)} placeholder="e.g. Mechanical Engineer" />
-          </FormField>
+          <FormField label="Position Title" required><input className={inputCls} value={recruitForm.position} onChange={e => setRF('position', e.target.value)} placeholder="e.g. Mechanical Engineer" /></FormField>
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Department" required>
-              <select className={selectCls} value={recruitForm.department} onChange={e => setRF('department', e.target.value)}>
-                <option value="">Select...</option>
-                {['Engineering','Finance','HR','Production','Procurement','Commercial','ICT','Administration'].map(d => <option key={d}>{d}</option>)}
-              </select>
-            </FormField>
-            <FormField label="No. of Vacancies" required>
-              <input className={inputCls} type="number" min="1" value={recruitForm.vacancies} onChange={e => setRF('vacancies', parseInt(e.target.value))} />
-            </FormField>
+            <FormField label="Department" required><select className={selectCls} value={recruitForm.department} onChange={e => setRF('department', e.target.value)}><option value="">Select...</option>{['Engineering','Finance','HR','Production','Procurement','Commercial','ICT','Administration'].map(d => <option key={d}>{d}</option>)}</select></FormField>
+            <FormField label="No. of Vacancies" required><input className={inputCls} type="number" min="1" value={recruitForm.vacancies} onChange={e => setRF('vacancies', parseInt(e.target.value))} /></FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Posted Date"><input className={inputCls} type="date" value={recruitForm.postedDate} onChange={e => setRF('postedDate', e.target.value)} /></FormField>
@@ -1187,25 +1519,12 @@ export default function HRMPage() {
           </div>
         </div>
       </Modal>
-
-      {/* Add Training */}
       <Modal open={showTrainingModal} onClose={() => setShowTrainingModal(false)} title="Add Training Record">
         <div className="space-y-4">
-          <FormField label="Training Title" required>
-            <input className={inputCls} value={trainingForm.title} onChange={e => setTF('title', e.target.value)} />
-          </FormField>
+          <FormField label="Training Title" required><input className={inputCls} value={trainingForm.title} onChange={e => setTF('title', e.target.value)} /></FormField>
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Employee" required>
-              <select className={selectCls} value={trainingForm.employeeId} onChange={e => setTF('employeeId', e.target.value)}>
-                <option value="">Select...</option>
-                {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}
-              </select>
-            </FormField>
-            <FormField label="Category">
-              <select className={selectCls} value={trainingForm.category} onChange={e => setTF('category', e.target.value)}>
-                {['Technical','Compliance','Quality','Management','Soft Skills'].map(c => <option key={c}>{c}</option>)}
-              </select>
-            </FormField>
+            <FormField label="Employee" required><select className={selectCls} value={trainingForm.employeeId} onChange={e => setTF('employeeId', e.target.value)}><option value="">Select...</option>{employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}</select></FormField>
+            <FormField label="Category"><select className={selectCls} value={trainingForm.category} onChange={e => setTF('category', e.target.value)}>{['Technical','Compliance','Quality','Management','Soft Skills'].map(c => <option key={c}>{c}</option>)}</select></FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Start Date"><input className={inputCls} type="date" value={trainingForm.startDate} onChange={e => setTF('startDate', e.target.value)} /></FormField>
@@ -1213,11 +1532,7 @@ export default function HRMPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Provider"><input className={inputCls} value={trainingForm.provider} onChange={e => setTF('provider', e.target.value)} /></FormField>
-            <FormField label="Status">
-              <select className={selectCls} value={trainingForm.status} onChange={e => setTF('status', e.target.value)}>
-                {['Scheduled','In Progress','Completed','Cancelled'].map(s => <option key={s}>{s}</option>)}
-              </select>
-            </FormField>
+            <FormField label="Status"><select className={selectCls} value={trainingForm.status} onChange={e => setTF('status', e.target.value)}>{['Scheduled','In Progress','Completed','Cancelled'].map(s => <option key={s}>{s}</option>)}</select></FormField>
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button onClick={() => setShowTrainingModal(false)} className="btn-ghost">Cancel</button>
@@ -1225,26 +1540,13 @@ export default function HRMPage() {
           </div>
         </div>
       </Modal>
-
-      {/* Disciplinary Action */}
       <Modal open={showDiscModal} onClose={() => setShowDiscModal(false)} title="New Disciplinary Action">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Employee" required>
-              <select className={selectCls} value={discForm.employeeId} onChange={e => setDF('employeeId', e.target.value)}>
-                <option value="">Select...</option>
-                {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}
-              </select>
-            </FormField>
-            <FormField label="Action Type" required>
-              <select className={selectCls} value={discForm.type} onChange={e => setDF('type', e.target.value)}>
-                {['Verbal Warning','Warning Letter','Final Warning','Suspension','Termination'].map(t => <option key={t}>{t}</option>)}
-              </select>
-            </FormField>
+            <FormField label="Employee" required><select className={selectCls} value={discForm.employeeId} onChange={e => setDF('employeeId', e.target.value)}><option value="">Select...</option>{employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}</select></FormField>
+            <FormField label="Action Type" required><select className={selectCls} value={discForm.type} onChange={e => setDF('type', e.target.value)}>{['Verbal Warning','Warning Letter','Final Warning','Suspension','Termination'].map(t => <option key={t}>{t}</option>)}</select></FormField>
           </div>
-          <FormField label="Reason" required>
-            <textarea className={inputCls + ' h-20 resize-none'} value={discForm.reason} onChange={e => setDF('reason', e.target.value)} />
-          </FormField>
+          <FormField label="Reason" required><textarea className={inputCls + ' h-20 resize-none'} value={discForm.reason} onChange={e => setDF('reason', e.target.value)} /></FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Date"><input className={inputCls} type="date" value={discForm.date} onChange={e => setDF('date', e.target.value)} /></FormField>
             <FormField label="Issued By"><input className={inputCls} value={discForm.issuedBy} onChange={e => setDF('issuedBy', e.target.value)} /></FormField>
@@ -1255,31 +1557,15 @@ export default function HRMPage() {
           </div>
         </div>
       </Modal>
-
-      {/* Assign Asset */}
       <Modal open={showAssetModal} onClose={() => setShowAssetModal(false)} title="Assign HR Asset">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Employee" required>
-              <select className={selectCls} value={assetForm.employeeId} onChange={e => setAF('employeeId', e.target.value)}>
-                <option value="">Select...</option>
-                {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}
-              </select>
-            </FormField>
-            <FormField label="Asset Type" required>
-              <select className={selectCls} value={assetForm.assetType} onChange={e => setAF('assetType', e.target.value)}>
-                <option value="">Select...</option>
-                {['Laptop','Desktop','Mobile Phone','ID Card','Uniform','Access Card','Vehicle','Tools','Other'].map(t => <option key={t}>{t}</option>)}
-              </select>
-            </FormField>
+            <FormField label="Employee" required><select className={selectCls} value={assetForm.employeeId} onChange={e => setAF('employeeId', e.target.value)}><option value="">Select...</option>{employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}</select></FormField>
+            <FormField label="Asset Type" required><select className={selectCls} value={assetForm.assetType} onChange={e => setAF('assetType', e.target.value)}><option value="">Select...</option>{['Laptop','Desktop','Mobile Phone','ID Card','Uniform','Access Card','Vehicle','Tools','Other'].map(t => <option key={t}>{t}</option>)}</select></FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Asset ID"><input className={inputCls} value={assetForm.assetId} onChange={e => setAF('assetId', e.target.value)} /></FormField>
-            <FormField label="Condition">
-              <select className={selectCls} value={assetForm.condition} onChange={e => setAF('condition', e.target.value)}>
-                {['New','Good','Fair','Poor'].map(c => <option key={c}>{c}</option>)}
-              </select>
-            </FormField>
+            <FormField label="Condition"><select className={selectCls} value={assetForm.condition} onChange={e => setAF('condition', e.target.value)}>{['New','Good','Fair','Poor'].map(c => <option key={c}>{c}</option>)}</select></FormField>
           </div>
           <FormField label="Issued Date"><input className={inputCls} type="date" value={assetForm.issuedDate} onChange={e => setAF('issuedDate', e.target.value)} /></FormField>
           <div className="flex justify-end gap-3 pt-2">
@@ -1288,31 +1574,17 @@ export default function HRMPage() {
           </div>
         </div>
       </Modal>
-
-      {/* Exit Management */}
       <Modal open={showExitModal} onClose={() => setShowExitModal(false)} title="New Exit Record">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Employee" required>
-              <select className={selectCls} value={exitForm.employeeId} onChange={e => setEF('employeeId', e.target.value)}>
-                <option value="">Select...</option>
-                {employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}
-              </select>
-            </FormField>
-            <FormField label="Reason">
-              <select className={selectCls} value={exitForm.reason} onChange={e => setEF('reason', e.target.value)}>
-                <option value="">Select...</option>
-                {['Resignation','Retirement','Termination','Transfer','Contract End','Death'].map(r => <option key={r}>{r}</option>)}
-              </select>
-            </FormField>
+            <FormField label="Employee" required><select className={selectCls} value={exitForm.employeeId} onChange={e => setEF('employeeId', e.target.value)}><option value="">Select...</option>{employees.map(e => <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>)}</select></FormField>
+            <FormField label="Reason"><select className={selectCls} value={exitForm.reason} onChange={e => setEF('reason', e.target.value)}><option value="">Select...</option>{['Resignation','Retirement','Termination','Transfer','Contract End','Death'].map(r => <option key={r}>{r}</option>)}</select></FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Resign Date"><input className={inputCls} type="date" value={exitForm.resignDate} onChange={e => setEF('resignDate', e.target.value)} /></FormField>
             <FormField label="Last Working Day"><input className={inputCls} type="date" value={exitForm.lastDay} onChange={e => setEF('lastDay', e.target.value)} /></FormField>
           </div>
-          <FormField label="Final Settlement (Rs.)">
-            <input className={inputCls} type="number" value={exitForm.finalSettlement} onChange={e => setEF('finalSettlement', parseFloat(e.target.value))} />
-          </FormField>
+          <FormField label="Final Settlement (Rs.)"><input className={inputCls} type="number" value={exitForm.finalSettlement} onChange={e => setEF('finalSettlement', parseFloat(e.target.value))} /></FormField>
           <div className="flex justify-end gap-3 pt-2">
             <button onClick={() => setShowExitModal(false)} className="btn-ghost">Cancel</button>
             <button onClick={() => {
